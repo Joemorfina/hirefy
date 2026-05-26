@@ -86,10 +86,12 @@ Retorne APENAS um JSON válido, sem markdown, sem texto fora do JSON:
       return res.status(200).json({ raw: clean });
     }
 
-    // 2. Salva no Supabase
+    // 2. Salva no Supabase — só se as credenciais existirem
     if (supabaseUrl && supabaseKey) {
       const l = parsed.levantamento || {};
-      await fetch(`${supabaseUrl}/rest/v1/vagas`, {
+      const baseUrl = supabaseUrl.replace(/\/rest\/v1.*$/, '');
+      
+      await fetch(`${baseUrl}/rest/v1/vagas`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
