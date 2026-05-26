@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
@@ -7,134 +7,31 @@
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet"/>
 <style>
 :root {
-  --bg: #0d0d0f;
-  --surface: #16161a;
-  --surface2: #1e1e24;
-  --border: #2a2a32;
-  --accent: #c8f135;
-  --accent2: #7c5cfc;
-  --text: #f0f0f2;
-  --muted: #6b6b7a;
-  --muted2: #9898aa;
-  --green: #22c55e;
-  --yellow: #f59e0b;
-  --red: #ef4444;
-  --radius: 16px;
-  --radius-sm: 10px;
+  --bg: #0d0d0f; --surface: #16161a; --surface2: #1e1e24;
+  --border: #2a2a32; --accent: #c8f135; --accent2: #7c5cfc;
+  --text: #f0f0f2; --muted: #6b6b7a; --muted2: #9898aa;
+  --green: #22c55e; --yellow: #f59e0b; --red: #ef4444; --radius: 16px; --radius-sm: 10px;
 }
 * { box-sizing: border-box; margin: 0; padding: 0; }
-body {
-  font-family: 'DM Sans', sans-serif;
-  background: var(--bg);
-  color: var(--text);
-  min-height: 100vh;
-  overflow-x: hidden;
-}
-
-/* ── LAYOUT ── */
-.shell {
-  display: flex;
-  min-height: 100vh;
-}
-.sidebar {
-  width: 220px;
-  background: var(--surface);
-  border-right: 1px solid var(--border);
-  padding: 28px 0;
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  position: fixed;
-  height: 100vh;
-  z-index: 10;
-}
-.logo {
-  font-family: 'Syne', sans-serif;
-  font-size: 22px;
-  font-weight: 800;
-  padding: 0 24px 24px;
-  color: var(--text);
-  letter-spacing: -0.5px;
-}
+body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; overflow-x: hidden; }
+.shell { display: flex; min-height: 100vh; }
+.sidebar { width: 220px; background: var(--surface); border-right: 1px solid var(--border); padding: 28px 0; display: flex; flex-direction: column; gap: 4px; position: fixed; height: 100vh; z-index: 10; }
+.logo { font-family: 'Syne', sans-serif; font-size: 22px; font-weight: 800; padding: 0 24px 24px; color: var(--text); }
 .logo span { color: var(--accent); }
-.nav-item {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 11px 24px;
-  font-size: 14px;
-  font-weight: 500;
-  color: var(--muted2);
-  cursor: pointer;
-  border-radius: 0;
-  transition: all 0.15s;
-  border-left: 3px solid transparent;
-}
+.nav-item { display: flex; align-items: center; gap: 10px; padding: 11px 24px; font-size: 14px; font-weight: 500; color: var(--muted2); cursor: pointer; border-left: 3px solid transparent; transition: all 0.15s; }
 .nav-item:hover { color: var(--text); background: var(--surface2); }
 .nav-item.active { color: var(--accent); border-left-color: var(--accent); background: rgba(200,241,53,0.05); }
 .nav-icon { font-size: 16px; width: 20px; text-align: center; }
-.main {
-  margin-left: 220px;
-  flex: 1;
-  min-height: 100vh;
-}
-
-/* ── TOPBAR ── */
-.topbar {
-  padding: 20px 32px;
-  border-bottom: 1px solid var(--border);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  background: var(--bg);
-  position: sticky;
-  top: 0;
-  z-index: 5;
-}
-.topbar-title {
-  font-family: 'Syne', sans-serif;
-  font-size: 18px;
-  font-weight: 700;
-}
-.topbar-right {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-.avatar {
-  width: 34px; height: 34px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, var(--accent2), var(--accent));
-  display: flex; align-items: center; justify-content: center;
-  font-size: 13px; font-weight: 700; color: #000;
-}
-
-/* ── PAGES ── */
+.main { margin-left: 220px; flex: 1; }
+.topbar { padding: 20px 32px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; background: var(--bg); position: sticky; top: 0; z-index: 5; }
+.topbar-title { font-family: 'Syne', sans-serif; font-size: 18px; font-weight: 700; }
+.avatar { width: 34px; height: 34px; border-radius: 50%; background: linear-gradient(135deg, var(--accent2), var(--accent)); display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; color: #000; }
 .page { display: none; padding: 32px; animation: fadeIn 0.2s ease; }
 .page.active { display: block; }
-@keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
-
-/* ── KPI CARDS ── */
-.kpi-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 16px;
-  margin-bottom: 32px;
-}
-.kpi-card {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 22px;
-  position: relative;
-  overflow: hidden;
-}
-.kpi-card::before {
-  content: '';
-  position: absolute;
-  top: 0; left: 0; right: 0;
-  height: 3px;
-}
+@keyframes fadeIn { from { opacity:0; transform:translateY(6px); } to { opacity:1; transform:translateY(0); } }
+.kpi-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 16px; margin-bottom: 32px; }
+.kpi-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 22px; position: relative; overflow: hidden; }
+.kpi-card::before { content:''; position:absolute; top:0; left:0; right:0; height:3px; }
 .kpi-card.green::before { background: var(--green); }
 .kpi-card.yellow::before { background: var(--yellow); }
 .kpi-card.purple::before { background: var(--accent2); }
@@ -142,689 +39,161 @@ body {
 .kpi-label { font-size: 12px; color: var(--muted); font-weight: 500; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 10px; }
 .kpi-value { font-family: 'Syne', sans-serif; font-size: 32px; font-weight: 800; line-height: 1; }
 .kpi-sub { font-size: 12px; color: var(--muted2); margin-top: 6px; }
-
-/* ── SECTION HEADER ── */
-.section-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 20px;
-}
-.section-title {
-  font-family: 'Syne', sans-serif;
-  font-size: 16px;
-  font-weight: 700;
-}
-
-/* ── RECENT JOBS TABLE ── */
-.jobs-table {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  overflow: hidden;
-}
-.jobs-table-header {
-  display: grid;
-  grid-template-columns: 2fr 1.2fr 1fr 1fr 0.8fr;
-  padding: 12px 20px;
-  border-bottom: 1px solid var(--border);
-  font-size: 11px;
-  font-weight: 600;
-  color: var(--muted);
-  text-transform: uppercase;
-  letter-spacing: 0.8px;
-}
-.jobs-table-row {
-  display: grid;
-  grid-template-columns: 2fr 1.2fr 1fr 1fr 0.8fr;
-  padding: 14px 20px;
-  border-bottom: 1px solid var(--border);
-  align-items: center;
-  font-size: 13.5px;
-  transition: background 0.12s;
-  cursor: pointer;
-}
+.section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
+.section-title { font-family: 'Syne', sans-serif; font-size: 16px; font-weight: 700; }
+.jobs-table { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
+.jobs-table-header { display: grid; grid-template-columns: 2fr 1.2fr 1fr 1fr 0.8fr; padding: 12px 20px; border-bottom: 1px solid var(--border); font-size: 11px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.8px; }
+.jobs-table-row { display: grid; grid-template-columns: 2fr 1.2fr 1fr 1fr 0.8fr; padding: 14px 20px; border-bottom: 1px solid var(--border); align-items: center; font-size: 13.5px; cursor: pointer; transition: background 0.12s; }
 .jobs-table-row:last-child { border-bottom: none; }
 .jobs-table-row:hover { background: var(--surface2); }
 .job-name { font-weight: 500; }
 .job-company { color: var(--muted2); font-size: 12px; margin-top: 2px; }
-.badge {
-  display: inline-flex;
-  align-items: center;
-  padding: 3px 10px;
-  border-radius: 20px;
-  font-size: 11px;
-  font-weight: 600;
-}
+.badge { display: inline-flex; align-items: center; padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; }
 .badge-green { background: rgba(34,197,94,0.12); color: var(--green); }
 .badge-yellow { background: rgba(245,158,11,0.12); color: var(--yellow); }
 .badge-purple { background: rgba(124,92,252,0.12); color: var(--accent2); }
 .badge-gray { background: rgba(107,107,122,0.15); color: var(--muted2); }
 .badge-red { background: rgba(239,68,68,0.12); color: var(--red); }
 .badge-lime { background: rgba(200,241,53,0.12); color: var(--accent); }
-
-/* stars */
-.stars { color: var(--accent); font-size: 12px; letter-spacing: 1px; }
-
-/* ── ANALYZE PAGE ── */
-.analyze-layout {
-  display: grid;
-  grid-template-columns: 1fr 1.4fr;
-  gap: 24px;
-  align-items: start;
-}
-.card {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 24px;
-}
-.card-title {
-  font-family: 'Syne', sans-serif;
-  font-size: 14px;
-  font-weight: 700;
-  margin-bottom: 16px;
-  color: var(--muted2);
-  text-transform: uppercase;
-  letter-spacing: 0.6px;
-}
-.textarea-mock {
-  background: var(--surface2);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
-  padding: 14px;
-  font-size: 13px;
-  color: var(--muted2);
-  min-height: 140px;
-  font-family: 'DM Sans', sans-serif;
-  line-height: 1.6;
-  font-style: italic;
-  margin-bottom: 14px;
-}
-.btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  padding: 11px 22px;
-  border-radius: var(--radius-sm);
-  font-size: 14px;
-  font-weight: 600;
-  cursor: pointer;
-  border: none;
-  transition: all 0.15s;
-  font-family: 'DM Sans', sans-serif;
-}
-.btn-primary {
-  background: var(--accent);
-  color: #0d0d0f;
-  width: 100%;
-}
+.stars { color: var(--accent); font-size: 12px; }
+.analyze-layout { display: grid; grid-template-columns: 1fr 1.4fr; gap: 24px; align-items: start; }
+.card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; }
+.card-title { font-family: 'Syne', sans-serif; font-size: 14px; font-weight: 700; margin-bottom: 16px; color: var(--muted2); text-transform: uppercase; letter-spacing: 0.6px; }
+.textarea-field { background: var(--surface2); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 14px; font-size: 13px; color: var(--text); min-height: 160px; font-family: 'DM Sans', sans-serif; line-height: 1.6; margin-bottom: 14px; width: 100%; resize: vertical; outline: none; transition: border-color 0.15s; }
+.textarea-field:focus { border-color: var(--accent); }
+.textarea-field::placeholder { color: var(--muted); font-style: italic; }
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 11px 22px; border-radius: var(--radius-sm); font-size: 14px; font-weight: 600; cursor: pointer; border: none; transition: all 0.15s; font-family: 'DM Sans', sans-serif; }
+.btn-primary { background: var(--accent); color: #0d0d0f; width: 100%; }
 .btn-primary:hover { background: #d4f542; transform: translateY(-1px); }
-.btn-secondary {
-  background: var(--surface2);
-  color: var(--text);
-  border: 1px solid var(--border);
-}
+.btn-primary:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+.btn-secondary { background: var(--surface2); color: var(--text); border: 1px solid var(--border); }
 .btn-secondary:hover { border-color: var(--accent); color: var(--accent); }
-.btn-purple {
-  background: var(--accent2);
-  color: #fff;
-  width: 100%;
-}
+.btn-purple { background: var(--accent2); color: #fff; width: 100%; }
 .btn-sm { padding: 7px 14px; font-size: 12px; }
-
-/* ── RESULT PANEL ── */
 .result-panel { display: flex; flex-direction: column; gap: 16px; }
-
-.result-block {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  overflow: hidden;
-}
-.result-block-header {
-  padding: 14px 18px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  cursor: pointer;
-  border-bottom: 1px solid var(--border);
-}
-.result-block-label {
-  font-size: 11px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  color: var(--muted);
-}
+.result-block { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
+.result-block-header { padding: 14px 18px; border-bottom: 1px solid var(--border); }
+.result-block-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); }
 .result-block-body { padding: 16px 18px; font-size: 13.5px; line-height: 1.65; color: var(--muted2); }
-
-/* PLACAR */
 .placar-grid { display: flex; flex-direction: column; gap: 10px; }
 .placar-item { display: flex; align-items: center; gap: 12px; }
 .placar-label { font-size: 13px; color: var(--text); min-width: 170px; }
 .placar-bar-bg { flex: 1; height: 6px; background: var(--surface2); border-radius: 3px; overflow: hidden; }
-.placar-bar-fill { height: 100%; border-radius: 3px; background: var(--accent); }
+.placar-bar-fill { height: 100%; border-radius: 3px; background: var(--accent); transition: width 0.8s ease; }
 .placar-score { font-size: 12px; color: var(--muted2); min-width: 30px; text-align: right; }
-
-/* VEREDITO */
-.veredito-box {
-  background: rgba(200,241,53,0.07);
-  border: 1.5px solid var(--accent);
-  border-radius: var(--radius);
-  padding: 20px 22px;
-  display: flex;
-  align-items: center;
-  gap: 16px;
-}
+.veredito-box { border-radius: var(--radius); padding: 20px 22px; display: flex; align-items: center; gap: 16px; }
+.veredito-aplica { background: rgba(200,241,53,0.07); border: 1.5px solid var(--accent); }
+.veredito-ressalvas { background: rgba(245,158,11,0.07); border: 1.5px solid var(--yellow); }
+.veredito-nao { background: rgba(239,68,68,0.07); border: 1.5px solid var(--red); }
 .veredito-icon { font-size: 28px; }
 .veredito-label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; }
-.veredito-text { font-family: 'Syne', sans-serif; font-size: 18px; font-weight: 800; color: var(--accent); }
-
-/* APPLY ACTIONS */
-.apply-actions { display: flex; flex-direction: column; gap: 10px; margin-top: 4px; }
-
-/* DORKS */
-.dork-item {
-  background: var(--surface2);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
-  padding: 12px 14px;
-  font-size: 12px;
-  font-family: monospace;
-  color: var(--accent2);
-  margin-bottom: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-}
+.veredito-text-aplica { font-family: 'Syne', sans-serif; font-size: 18px; font-weight: 800; color: var(--accent); }
+.veredito-text-ressalvas { font-family: 'Syne', sans-serif; font-size: 18px; font-weight: 800; color: var(--yellow); }
+.veredito-text-nao { font-family: 'Syne', sans-serif; font-size: 18px; font-weight: 800; color: var(--red); }
+.apply-actions { display: flex; flex-direction: column; gap: 10px; }
+.dork-item { background: var(--surface2); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 12px 14px; font-size: 12px; font-family: monospace; color: var(--accent2); margin-bottom: 8px; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
 .dork-text { flex: 1; word-break: break-all; line-height: 1.5; }
-
-/* PRO/CONTRA */
 .pro-contra { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-.pro-list, .contra-list { display: flex; flex-direction: column; gap: 7px; }
-.pro-item { display: flex; align-items: flex-start; gap: 8px; font-size: 13px; color: var(--muted2); }
-.pro-dot { color: var(--green); font-weight: 700; margin-top: 1px; }
-.contra-dot { color: var(--red); font-weight: 700; margin-top: 1px; }
-
-/* ── MOBILE HEADER (hidden on desktop) ── */
+.pro-item { display: flex; align-items: flex-start; gap: 8px; font-size: 13px; color: var(--muted2); margin-bottom: 6px; }
+.pro-dot { color: var(--green); font-weight: 700; }
+.contra-dot { color: var(--red); font-weight: 700; }
+.pill { display: inline-flex; align-items: center; gap: 4px; padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; background: var(--surface2); color: var(--muted2); border: 1px solid var(--border); margin: 2px; }
+.resposta-box { background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; padding: 12px; font-size: 13px; line-height: 1.6; margin-bottom: 8px; white-space: pre-wrap; }
+.loading-spinner { display: flex; align-items: center; justify-content: center; gap: 12px; padding: 40px; color: var(--muted2); font-size: 14px; }
+.spinner { width: 20px; height: 20px; border: 2px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin 0.8s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+@keyframes blink { 0%,100%{opacity:1;} 50%{opacity:0;} }
+.cursor { display: inline-block; width: 2px; height: 14px; background: var(--accent); margin-left: 2px; animation: blink 0.8s infinite; vertical-align: middle; }
 .mobile-header { display: none; }
-
-/* ── TABS (mobile) ── */
 .mobile-nav { display: none; }
-
-/* ── RESPONSIVE ── */
 @media (max-width: 768px) {
   .sidebar { display: none; }
   .main { margin-left: 0; }
-  .mobile-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 16px 20px;
-    border-bottom: 1px solid var(--border);
-    background: var(--bg);
-    position: sticky; top: 0; z-index: 10;
-  }
+  .mobile-header { display: flex; align-items: center; justify-content: space-between; padding: 16px 20px; border-bottom: 1px solid var(--border); background: var(--bg); position: sticky; top: 0; z-index: 10; }
   .mobile-logo { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 20px; }
   .mobile-logo span { color: var(--accent); }
   .topbar { display: none; }
   .page { padding: 20px 16px 100px; }
   .kpi-grid { grid-template-columns: 1fr 1fr; }
   .analyze-layout { grid-template-columns: 1fr; }
+  .pro-contra { grid-template-columns: 1fr; }
   .jobs-table-header, .jobs-table-row { grid-template-columns: 2fr 1fr 1fr; }
-  .jobs-table-header > *:nth-child(4),
-  .jobs-table-header > *:nth-child(5),
-  .jobs-table-row > *:nth-child(4),
-  .jobs-table-row > *:nth-child(5) { display: none; }
-  .mobile-nav {
-    display: flex;
-    position: fixed;
-    bottom: 0; left: 0; right: 0;
-    background: var(--surface);
-    border-top: 1px solid var(--border);
-    z-index: 20;
-  }
-  .mobile-nav-item {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 12px 8px;
-    font-size: 10px;
-    color: var(--muted);
-    cursor: pointer;
-    gap: 4px;
-    transition: color 0.15s;
-  }
+  .jobs-table-header > *:nth-child(4), .jobs-table-header > *:nth-child(5),
+  .jobs-table-row > *:nth-child(4), .jobs-table-row > *:nth-child(5) { display: none; }
+  .mobile-nav { display: flex; position: fixed; bottom: 0; left: 0; right: 0; background: var(--surface); border-top: 1px solid var(--border); z-index: 20; }
+  .mobile-nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 12px 8px; font-size: 10px; color: var(--muted); cursor: pointer; gap: 4px; transition: color 0.15s; }
   .mobile-nav-item.active { color: var(--accent); }
   .mobile-nav-icon { font-size: 20px; }
-  .pro-contra { grid-template-columns: 1fr; }
 }
-
-/* streaming cursor */
-@keyframes blink { 0%,100% { opacity: 1; } 50% { opacity: 0; } }
-.cursor { display: inline-block; width: 2px; height: 14px; background: var(--accent); margin-left: 2px; animation: blink 0.8s infinite; vertical-align: middle; }
-
-/* pill tag */
-.pill {
-  display: inline-flex; align-items: center; gap: 4px;
-  padding: 3px 10px; border-radius: 20px;
-  font-size: 11px; font-weight: 600;
-  background: var(--surface2); color: var(--muted2);
-  border: 1px solid var(--border);
-}
-
-/* divider */
-.divider { height: 1px; background: var(--border); margin: 4px 0; }
-
-/* resume upload area */
-.upload-area {
-  border: 2px dashed var(--border);
-  border-radius: var(--radius-sm);
-  padding: 28px;
-  text-align: center;
-  color: var(--muted);
-  font-size: 13px;
-  margin-bottom: 14px;
-  cursor: pointer;
-  transition: border-color 0.15s;
-}
-.upload-area:hover { border-color: var(--accent); color: var(--accent); }
-.upload-icon { font-size: 28px; margin-bottom: 8px; }
 </style>
 </head>
 <body>
-
-<!-- SIDEBAR (desktop) -->
 <div class="shell">
 <nav class="sidebar">
   <div class="logo">Hire<span>Fy</span></div>
-  <div class="nav-item active" onclick="showPage('dashboard')">
-    <span class="nav-icon">⬛</span> Dashboard
-  </div>
-  <div class="nav-item" onclick="showPage('analyze')">
-    <span class="nav-icon">🔍</span> Analisar Vaga
-  </div>
-  <div class="nav-item" onclick="showPage('jobs')">
-    <span class="nav-icon">📋</span> Minhas Vagas
-  </div>
-  <div class="nav-item" onclick="showPage('profile')">
-    <span class="nav-icon">👤</span> Meu Perfil
-  </div>
-  <div style="margin-top:auto; padding: 0 24px;">
-    <div style="font-size:11px; color:var(--muted); padding-top:20px; border-top:1px solid var(--border);">
-      v1.0 · HireFy Beta
-    </div>
+  <div class="nav-item active" onclick="showPage('dashboard')"><span class="nav-icon">⬛</span> Dashboard</div>
+  <div class="nav-item" onclick="showPage('analyze')"><span class="nav-icon">🔍</span> Analisar Vaga</div>
+  <div class="nav-item" onclick="showPage('jobs')"><span class="nav-icon">📋</span> Minhas Vagas</div>
+  <div class="nav-item" onclick="showPage('profile')"><span class="nav-icon">👤</span> Meu Perfil</div>
+  <div style="margin-top:auto;padding:0 24px;">
+    <div style="font-size:11px;color:var(--muted);padding-top:20px;border-top:1px solid var(--border);">v1.1 · HireFy Beta</div>
   </div>
 </nav>
-
-<!-- MAIN -->
 <div class="main">
-
-  <!-- MOBILE HEADER -->
   <div class="mobile-header">
     <div class="mobile-logo">Hire<span>Fy</span></div>
     <div class="avatar">BB</div>
   </div>
-
-  <!-- TOPBAR -->
   <div class="topbar">
     <div class="topbar-title" id="page-title">Dashboard</div>
-    <div class="topbar-right">
-      <div class="avatar">BB</div>
-    </div>
+    <div class="avatar">BB</div>
   </div>
 
-  <!-- ═══════════ DASHBOARD ═══════════ -->
+  <!-- DASHBOARD -->
   <div class="page active" id="page-dashboard">
     <div class="kpi-grid">
-      <div class="kpi-card lime">
-        <div class="kpi-label">Vagas Analisadas</div>
-        <div class="kpi-value">24</div>
-        <div class="kpi-sub">esta semana</div>
-      </div>
-      <div class="kpi-card green">
-        <div class="kpi-label">Aplicações Enviadas</div>
-        <div class="kpi-value">11</div>
-        <div class="kpi-sub">taxa: 46%</div>
-      </div>
-      <div class="kpi-card yellow">
-        <div class="kpi-label">Aguardando Resposta</div>
-        <div class="kpi-value">7</div>
-        <div class="kpi-sub">em andamento</div>
-      </div>
-      <div class="kpi-card purple">
-        <div class="kpi-label">Em Processo</div>
-        <div class="kpi-value">2</div>
-        <div class="kpi-sub">entrevistas marcadas</div>
-      </div>
+      <div class="kpi-card lime"><div class="kpi-label">Vagas Analisadas</div><div class="kpi-value" id="kpi-analisadas">0</div><div class="kpi-sub">total</div></div>
+      <div class="kpi-card green"><div class="kpi-label">Aplicações Enviadas</div><div class="kpi-value" id="kpi-aplicadas">0</div><div class="kpi-sub">confirmadas</div></div>
+      <div class="kpi-card yellow"><div class="kpi-label">Aguardando Resposta</div><div class="kpi-value" id="kpi-aguardando">0</div><div class="kpi-sub">em andamento</div></div>
+      <div class="kpi-card purple"><div class="kpi-label">Em Processo</div><div class="kpi-value" id="kpi-processo">0</div><div class="kpi-sub">entrevistas</div></div>
     </div>
-
     <div class="section-header">
       <div class="section-title">Vagas Recentes</div>
-      <button class="btn btn-secondary btn-sm" onclick="showPage('jobs')">Ver todas →</button>
+      <button class="btn btn-primary btn-sm" onclick="showPage('analyze')">+ Analisar nova</button>
     </div>
-
     <div class="jobs-table">
-      <div class="jobs-table-header">
-        <div>Vaga</div>
-        <div>Modelo</div>
-        <div>Score</div>
-        <div>Veredito</div>
-        <div>Status</div>
-      </div>
-      <div class="jobs-table-row" onclick="showPage('analyze')">
-        <div>
-          <div class="job-name">Customer Support Specialist</div>
-          <div class="job-company">Flowdesk Inc.</div>
-        </div>
-        <div><span class="badge badge-green">Remoto</span></div>
-        <div><span class="stars">★★★★☆</span></div>
-        <div><span class="badge badge-lime">Aplica agora</span></div>
-        <div><span class="badge badge-yellow">Aguardando</span></div>
-      </div>
-      <div class="jobs-table-row">
-        <div>
-          <div class="job-name">Analista de Atendimento</div>
-          <div class="job-company">TechCorp Brasil</div>
-        </div>
-        <div><span class="badge badge-purple">Híbrido</span></div>
-        <div><span class="stars">★★★☆☆</span></div>
-        <div><span class="badge badge-yellow">Com ressalvas</span></div>
-        <div><span class="badge badge-green">Em processo</span></div>
-      </div>
-      <div class="jobs-table-row">
-        <div>
-          <div class="job-name">Support Agent — LATAM</div>
-          <div class="job-company">Stripe</div>
-        </div>
-        <div><span class="badge badge-green">Remoto</span></div>
-        <div><span class="stars">★★★★★</span></div>
-        <div><span class="badge badge-lime">Aplica agora</span></div>
-        <div><span class="badge badge-purple">Aplicada</span></div>
-      </div>
-      <div class="jobs-table-row">
-        <div>
-          <div class="job-name">Backoffice Operacional</div>
-          <div class="job-company">Banco Fintech</div>
-        </div>
-        <div><span class="badge badge-gray">Presencial</span></div>
-        <div><span class="stars">★★☆☆☆</span></div>
-        <div><span class="badge badge-red">Não é pra você</span></div>
-        <div><span class="badge badge-gray">Descartada</span></div>
-      </div>
+      <div class="jobs-table-header"><div>Vaga</div><div>Modelo</div><div>Score</div><div>Veredito</div><div>Status</div></div>
+      <div id="jobs-list"><div style="padding:24px;text-align:center;color:var(--muted);font-size:13px;">Nenhuma vaga analisada ainda. <span style="color:var(--accent);cursor:pointer;" onclick="showPage('analyze')">Analisar agora →</span></div></div>
     </div>
   </div>
 
-  <!-- ═══════════ ANALISAR VAGA ═══════════ -->
+  <!-- ANALISAR VAGA -->
   <div class="page" id="page-analyze">
     <div class="analyze-layout">
-
-      <!-- LEFT: inputs -->
       <div style="display:flex;flex-direction:column;gap:16px;">
         <div class="card">
-          <div class="card-title">📄 Seu Currículo</div>
-          <div class="upload-area" onclick="this.style.borderColor='var(--accent)';this.style.color='var(--accent)'">
-            <div class="upload-icon">⬆️</div>
-            <div>Arraste o PDF ou clique para carregar</div>
-            <div style="font-size:11px;margin-top:6px;color:var(--muted);">Ou cole o texto abaixo</div>
-          </div>
-          <div class="textarea-mock" style="min-height:60px;">Currículo carregado: Bruno Brasileiro — Customer Support...</div>
-        </div>
-
-        <div class="card">
           <div class="card-title">🔎 Cole a Vaga Aqui</div>
-          <div class="textarea-mock" id="job-input">Cole o texto da vaga ou link aqui. Pode ser texto corrido, bullet points ou print...</div>
-          <button class="btn btn-primary" onclick="showResult()">⚡ Analisar Vaga</button>
+          <textarea class="textarea-field" id="job-input" placeholder="Cole aqui o texto completo da vaga — título, empresa, responsabilidades, requisitos, salário, benefícios..."></textarea>
+          <button class="btn btn-primary" id="btn-analisar" onclick="analisarVaga()">⚡ Analisar Vaga</button>
         </div>
       </div>
-
-      <!-- RIGHT: resultado -->
-      <div class="result-panel" id="result-area" style="display:none;">
-
-        <!-- Resumo -->
-        <div class="result-block">
-          <div class="result-block-header">
-            <div class="result-block-label">📌 Resumo em 1 linha</div>
-          </div>
-          <div class="result-block-body">
-            Vaga de suporte ao cliente via tickets e chat para empresa de SaaS, focada em resolver dúvidas de primeiro nível e acompanhar chamados até resolução. <span class="cursor"></span>
-          </div>
-        </div>
-
-        <!-- Check rápido -->
-        <div class="result-block">
-          <div class="result-block-header">
-            <div class="result-block-label">⚡ Check Rápido</div>
-          </div>
-          <div class="result-block-body">
-            <div style="margin-bottom:8px;"><strong style="color:var(--text);">O que é de verdade?</strong> Atendimento escrito, ticket-based, sem call center pesado.</div>
-            <div style="margin-bottom:8px;"><strong style="color:var(--text);">Vai exigir o quê?</strong> Inglês escrito B2+, CRM, agilidade em volume alto de tickets.</div>
-            <div><strong style="color:var(--text);">Vale a pena?</strong> Sim — é o core do seu perfil. Inglês certificado sustenta. Atenção: vídeo call pode aparecer em onboarding.</div>
-          </div>
-        </div>
-
-        <!-- Levantamento -->
-        <div class="result-block">
-          <div class="result-block-header">
-            <div class="result-block-label">🗂️ Levantamento da Vaga</div>
-          </div>
-          <div class="result-block-body">
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:13px;">
-              <div><span style="color:var(--muted);font-size:11px;display:block;">CARGO</span>Customer Support Specialist</div>
-              <div><span style="color:var(--muted);font-size:11px;display:block;">EMPRESA</span>Flowdesk Inc.</div>
-              <div><span style="color:var(--muted);font-size:11px;display:block;">MODELO</span>Remoto — América Latina</div>
-              <div><span style="color:var(--muted);font-size:11px;display:block;">SALÁRIO</span>USD 1.200–1.800/mês</div>
-              <div><span style="color:var(--muted);font-size:11px;display:block;">HORÁRIO</span>9h–18h EST</div>
-              <div><span style="color:var(--muted);font-size:11px;display:block;">CONTRATO</span>Contractor (PJ)</div>
-            </div>
-            <div style="margin-top:12px;">
-              <span style="color:var(--muted);font-size:11px;display:block;margin-bottom:6px;">PALAVRAS-CHAVE ATS</span>
-              <div style="display:flex;flex-wrap:wrap;gap:6px;">
-                <span class="pill">customer support</span>
-                <span class="pill">ticket triage</span>
-                <span class="pill">SLA</span>
-                <span class="pill">Zendesk</span>
-                <span class="pill">CRM</span>
-                <span class="pill">first-level support</span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Placar -->
-        <div class="result-block">
-          <div class="result-block-header">
-            <div class="result-block-label">🎯 Radar de Compatibilidade</div>
-          </div>
-          <div class="result-block-body">
-            <div class="placar-grid">
-              <div class="placar-item">
-                <div class="placar-label">Aderência Técnica</div>
-                <div class="placar-bar-bg"><div class="placar-bar-fill" style="width:80%"></div></div>
-                <div class="placar-score">4/5</div>
-              </div>
-              <div class="placar-item">
-                <div class="placar-label">Aderência Comportamental</div>
-                <div class="placar-bar-bg"><div class="placar-bar-fill" style="width:100%"></div></div>
-                <div class="placar-score">5/5</div>
-              </div>
-              <div class="placar-item">
-                <div class="placar-label">Custo-Benefício</div>
-                <div class="placar-bar-bg"><div class="placar-bar-fill" style="width:80%"></div></div>
-                <div class="placar-score">4/5</div>
-              </div>
-              <div class="placar-item">
-                <div class="placar-label">Esforço Operacional</div>
-                <div class="placar-bar-bg"><div class="placar-bar-fill" style="width:80%;background:var(--green)"></div></div>
-                <div class="placar-score">4/5 🟢</div>
-              </div>
-              <div class="placar-item">
-                <div class="placar-label">Potencial Estratégico</div>
-                <div class="placar-bar-bg"><div class="placar-bar-fill" style="width:80%"></div></div>
-                <div class="placar-score">4/5</div>
-              </div>
-              <div class="placar-item">
-                <div class="placar-label">Bônus Internacional</div>
-                <div class="placar-bar-bg"><div class="placar-bar-fill" style="width:80%;background:var(--accent2)"></div></div>
-                <div class="placar-score">4/5 🌍</div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Prós e Contras -->
-        <div class="result-block">
-          <div class="result-block-header">
-            <div class="result-block-label">⚖️ Prós & Contras</div>
-          </div>
-          <div class="result-block-body">
-            <div class="pro-contra">
-              <div class="pro-list">
-                <div class="pro-item"><span class="pro-dot">✓</span> Remoto, escrito, ticket-based — core do seu perfil</div>
-                <div class="pro-item"><span class="pro-dot">✓</span> Paga em dólar, contractor</div>
-                <div class="pro-item"><span class="pro-dot">✓</span> Horário previsível, sem call center pesado</div>
-              </div>
-              <div class="contra-list">
-                <div class="pro-item"><span class="contra-dot">✗</span> EST pode conflitar com horário atual</div>
-                <div class="pro-item"><span class="contra-dot">✗</span> Zendesk não citado no CV — use "CRM similar"</div>
-                <div class="pro-item"><span class="contra-dot">✗</span> Inglês oral pode aparecer em onboarding</div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Riscos -->
-        <div class="result-block">
-          <div class="result-block-header">
-            <div class="result-block-label">⚠️ Riscos</div>
-          </div>
-          <div class="result-block-body" style="display:flex;flex-direction:column;gap:8px;">
-            <div style="display:flex;align-items:center;gap:10px;">
-              <span style="color:var(--yellow);">●</span>
-              <span>Listening em reuniões internas em inglês — risco médio</span>
-            </div>
-            <div style="display:flex;align-items:center;gap:10px;">
-              <span style="color:var(--yellow);">●</span>
-              <span>Zendesk não está no CV — ponte: "ticket management systems"</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Estratégia -->
-        <div class="result-block">
-          <div class="result-block-header">
-            <div class="result-block-label">🚀 Estratégia de Candidatura</div>
-          </div>
-          <div class="result-block-body">
-            Destaque: triagem de chamados na RHOSS, CRM, SLA, atendimento multicanal e o período freelance com cliente nos EUA — prova real de experiência remota e internacional. EF SET B2 certificado entra como diferencial concreto. Evite mencionar Zendesk se não tiver experiência direta.
-          </div>
-        </div>
-
-        <!-- VEREDITO -->
-        <div class="veredito-box">
-          <div class="veredito-icon">✅</div>
-          <div>
-            <div class="veredito-label">Veredito</div>
-            <div class="veredito-text">APLICA AGORA</div>
-          </div>
-        </div>
-
-        <!-- AÇÕES PÓS-VEREDITO -->
-        <div class="apply-actions">
-          <button class="btn btn-primary" onclick="showApplyPanel()">✅ Vou aplicar — gerar respostas prontas</button>
-          <button class="btn btn-purple" onclick="showDorks()">🔍 Buscar vagas similares</button>
-        </div>
-
-        <!-- RESPOSTAS PRONTAS (hidden) -->
-        <div id="apply-panel" style="display:none;">
-          <div class="result-block">
-            <div class="result-block-header">
-              <div class="result-block-label">✍️ Respostas Prontas</div>
-            </div>
-            <div class="result-block-body" style="display:flex;flex-direction:column;gap:14px;">
-              <div>
-                <div style="font-size:11px;color:var(--muted);margin-bottom:5px;text-transform:uppercase;letter-spacing:.8px;">Tell us about yourself</div>
-                <div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:12px;font-size:13px;line-height:1.6;">
-                  "I'm a Customer Support professional with 10+ years of experience in ticket-based and multichannel support across healthcare and telecom. I've handled high-volume case management using CRM systems, coordinated with internal teams to resolve demands within SLA, and delivered support in Portuguese, English and basic Spanish."
-                </div>
-                <button class="btn btn-secondary btn-sm" style="margin-top:8px;">📋 Copiar</button>
-              </div>
-              <div class="divider"></div>
-              <div>
-                <div style="font-size:11px;color:var(--muted);margin-bottom:5px;text-transform:uppercase;letter-spacing:.8px;">Pretensão Salarial</div>
-                <div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:12px;font-size:13px;line-height:1.6;">
-                  "I'm currently in a career transition and prefer to align expectations based on the full responsibilities and benefits package. My range for this role would be USD 1,200–1,600/month."
-                </div>
-                <button class="btn btn-secondary btn-sm" style="margin-top:8px;">📋 Copiar</button>
-              </div>
-              <div class="divider"></div>
-              <div>
-                <div style="font-size:11px;color:var(--muted);margin-bottom:5px;text-transform:uppercase;letter-spacing:.8px;">Possíveis Perguntas de Entrevista</div>
-                <div style="display:flex;flex-direction:column;gap:8px;font-size:13px;">
-                  <div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:10px 12px;">"How does the team usually handle ticket escalations?"</div>
-                  <div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:10px 12px;">"What does success look like in the first 90 days?"</div>
-                  <div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:10px 12px;">"Is there room to grow within the support team?"</div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- DORKS (hidden) -->
-        <div id="dorks-panel" style="display:none;">
-          <div class="result-block">
-            <div class="result-block-header">
-              <div class="result-block-label">🔗 Buscar Vagas Similares</div>
-            </div>
-            <div class="result-block-body">
-              <div class="dork-item">
-                <div class="dork-text">site:linkedin.com/jobs "customer support" "remote" "Latin America" -senior</div>
-                <button class="btn btn-secondary btn-sm">Abrir →</button>
-              </div>
-              <div class="dork-item">
-                <div class="dork-text">site:greenhouse.io "support specialist" OR "support agent" "remote" Brazil</div>
-                <button class="btn btn-secondary btn-sm">Abrir →</button>
-              </div>
-              <div class="dork-item">
-                <div class="dork-text">site:jobs.lever.co "customer support" "ticket" "remote" "Latin America"</div>
-                <button class="btn btn-secondary btn-sm">Abrir →</button>
-              </div>
-            </div>
-          </div>
-        </div>
-
-      </div><!-- /result-area -->
+      <div id="result-area" style="display:none;" class="result-panel"></div>
     </div>
   </div>
 
-  <!-- ═══════════ MINHAS VAGAS ═══════════ -->
+  <!-- MINHAS VAGAS -->
   <div class="page" id="page-jobs">
     <div class="section-header">
       <div class="section-title">Todas as Vagas</div>
       <button class="btn btn-primary btn-sm" onclick="showPage('analyze')">+ Analisar nova</button>
     </div>
     <div class="jobs-table">
-      <div class="jobs-table-header">
-        <div>Vaga</div>
-        <div>Modelo</div>
-        <div>Score</div>
-        <div>Veredito</div>
-        <div>Status</div>
-      </div>
-      <div class="jobs-table-row"><div><div class="job-name">Customer Support Specialist</div><div class="job-company">Flowdesk Inc.</div></div><div><span class="badge badge-green">Remoto</span></div><div><span class="stars">★★★★☆</span></div><div><span class="badge badge-lime">Aplica agora</span></div><div><span class="badge badge-yellow">Aguardando</span></div></div>
-      <div class="jobs-table-row"><div><div class="job-name">Analista de Atendimento</div><div class="job-company">TechCorp Brasil</div></div><div><span class="badge badge-purple">Híbrido</span></div><div><span class="stars">★★★☆☆</span></div><div><span class="badge badge-yellow">Com ressalvas</span></div><div><span class="badge badge-green">Em processo</span></div></div>
-      <div class="jobs-table-row"><div><div class="job-name">Support Agent — LATAM</div><div class="job-company">Stripe</div></div><div><span class="badge badge-green">Remoto</span></div><div><span class="stars">★★★★★</span></div><div><span class="badge badge-lime">Aplica agora</span></div><div><span class="badge badge-purple">Aplicada</span></div></div>
-      <div class="jobs-table-row"><div><div class="job-name">Backoffice Operacional</div><div class="job-company">Banco Fintech</div></div><div><span class="badge badge-gray">Presencial</span></div><div><span class="stars">★★☆☆☆</span></div><div><span class="badge badge-red">Não é pra você</span></div><div><span class="badge badge-gray">Descartada</span></div></div>
-      <div class="jobs-table-row"><div><div class="job-name">CX Specialist</div><div class="job-company">Notion</div></div><div><span class="badge badge-green">Remoto</span></div><div><span class="stars">★★★★★</span></div><div><span class="badge badge-lime">Aplica agora</span></div><div><span class="badge badge-green">Em processo</span></div></div>
+      <div class="jobs-table-header"><div>Vaga</div><div>Modelo</div><div>Score</div><div>Veredito</div><div>Status</div></div>
+      <div id="jobs-list-full"><div style="padding:24px;text-align:center;color:var(--muted);font-size:13px;">Nenhuma vaga ainda.</div></div>
     </div>
   </div>
 
-  <!-- ═══════════ PERFIL ═══════════ -->
+  <!-- PERFIL -->
   <div class="page" id="page-profile">
     <div style="max-width:560px;display:flex;flex-direction:column;gap:16px;">
       <div class="card">
@@ -843,45 +212,21 @@ body {
           <div style="display:flex;justify-content:space-between;"><span style="color:var(--muted);">Foco atual</span><span>Vagas internacionais</span></div>
         </div>
       </div>
-      <div class="card">
-        <div class="card-title">📄 Currículo Ativo</div>
-        <div style="display:flex;align-items:center;justify-content:space-between;font-size:13px;">
-          <div>
-            <div style="font-weight:500;">BRUNO_RESUME_CUSTOMER_SUPPORT.pdf</div>
-            <div style="color:var(--muted);font-size:12px;margin-top:2px;">Atualizado em Mai 2025</div>
-          </div>
-          <button class="btn btn-secondary btn-sm">Trocar</button>
-        </div>
-      </div>
     </div>
   </div>
+</div>
+</div>
 
-</div><!-- /main -->
-</div><!-- /shell -->
-
-<!-- MOBILE NAV -->
 <div class="mobile-nav">
-  <div class="mobile-nav-item active" onclick="showPage('dashboard')">
-    <div class="mobile-nav-icon">⬛</div>Dashboard
-  </div>
-  <div class="mobile-nav-item" onclick="showPage('analyze')">
-    <div class="mobile-nav-icon">🔍</div>Analisar
-  </div>
-  <div class="mobile-nav-item" onclick="showPage('jobs')">
-    <div class="mobile-nav-icon">📋</div>Vagas
-  </div>
-  <div class="mobile-nav-item" onclick="showPage('profile')">
-    <div class="mobile-nav-icon">👤</div>Perfil
-  </div>
+  <div class="mobile-nav-item active" onclick="showPage('dashboard')"><div class="mobile-nav-icon">⬛</div>Dashboard</div>
+  <div class="mobile-nav-item" onclick="showPage('analyze')"><div class="mobile-nav-icon">🔍</div>Analisar</div>
+  <div class="mobile-nav-item" onclick="showPage('jobs')"><div class="mobile-nav-icon">📋</div>Vagas</div>
+  <div class="mobile-nav-item" onclick="showPage('profile')"><div class="mobile-nav-icon">👤</div>Perfil</div>
 </div>
 
 <script>
-const titles = {
-  dashboard: 'Dashboard',
-  analyze: 'Analisar Vaga',
-  jobs: 'Minhas Vagas',
-  profile: 'Meu Perfil'
-};
+const titles = { dashboard:'Dashboard', analyze:'Analisar Vaga', jobs:'Minhas Vagas', profile:'Meu Perfil' };
+let vagas = JSON.parse(localStorage.getItem('hirefy_vagas') || '[]');
 
 function showPage(id) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
@@ -892,27 +237,262 @@ function showPage(id) {
   const idx = {dashboard:0,analyze:1,jobs:2,profile:3}[id];
   document.querySelectorAll('.nav-item')[idx].classList.add('active');
   document.querySelectorAll('.mobile-nav-item')[idx].classList.add('active');
+  if (id === 'dashboard' || id === 'jobs') renderJobsList();
 }
 
-function showResult() {
-  const area = document.getElementById('result-area');
-  area.style.display = 'flex';
-  area.style.flexDirection = 'column';
-  area.style.gap = '16px';
-  area.scrollIntoView({ behavior: 'smooth', block: 'start' });
+function getVeredito(v) {
+  if (!v) return { cls: 'badge-gray', txt: 'Analisando' };
+  const u = v.toUpperCase();
+  if (u.includes('AGORA')) return { cls: 'badge-lime', txt: 'Aplica agora' };
+  if (u.includes('RESSALVA')) return { cls: 'badge-yellow', txt: 'Com ressalvas' };
+  if (u.includes('NÃO') || u.includes('NAO')) return { cls: 'badge-red', txt: 'Não é pra você' };
+  return { cls: 'badge-yellow', txt: 'Analise' };
 }
 
-function showApplyPanel() {
-  const p = document.getElementById('apply-panel');
-  p.style.display = p.style.display === 'none' ? 'block' : 'none';
-  p.scrollIntoView({ behavior: 'smooth', block: 'start' });
+function starsHtml(n) {
+  let s = '';
+  for (let i=1;i<=5;i++) s += i<=n ? '★' : '☆';
+  return `<span class="stars">${s}</span>`;
 }
 
-function showDorks() {
-  const d = document.getElementById('dorks-panel');
-  d.style.display = d.style.display === 'none' ? 'block' : 'none';
-  d.scrollIntoView({ behavior: 'smooth', block: 'start' });
+function renderJobsList() {
+  const list = document.getElementById('jobs-list');
+  const listFull = document.getElementById('jobs-list-full');
+  const kpiA = document.getElementById('kpi-analisadas');
+  const kpiAp = document.getElementById('kpi-aplicadas');
+  const kpiAg = document.getElementById('kpi-aguardando');
+  const kpiP = document.getElementById('kpi-processo');
+
+  kpiA.textContent = vagas.length;
+  kpiAp.textContent = vagas.filter(v=>v.status==='APLICADA').length;
+  kpiAg.textContent = vagas.filter(v=>v.status==='AGUARDANDO').length;
+  kpiP.textContent = vagas.filter(v=>v.status==='PROCESSO').length;
+
+  const empty = '<div style="padding:24px;text-align:center;color:var(--muted);font-size:13px;">Nenhuma vaga ainda. <span style="color:var(--accent);cursor:pointer;" onclick="showPage(\'analyze\')">Analisar agora →</span></div>';
+
+  if (!vagas.length) {
+    if (list) list.innerHTML = empty;
+    if (listFull) listFull.innerHTML = empty;
+    return;
+  }
+
+  const rows = vagas.slice().reverse().map(v => {
+    const ver = getVeredito(v.veredito);
+    const score = v.placar ? Math.round((v.placar.tecnica+v.placar.comportamental+v.placar.estrategico)/3) : 0;
+    return `<div class="jobs-table-row">
+      <div><div class="job-name">${v.cargo||'Vaga'}</div><div class="job-company">${v.empresa||''}</div></div>
+      <div><span class="badge badge-${v.modelo?.toLowerCase().includes('remoto')?'green':'purple'}">${v.modelo||'—'}</span></div>
+      <div>${starsHtml(score)}</div>
+      <div><span class="badge ${ver.cls}">${ver.txt}</span></div>
+      <div><span class="badge badge-gray">${v.status||'SALVA'}</span></div>
+    </div>`;
+  }).join('');
+
+  if (list) list.innerHTML = rows;
+  if (listFull) listFull.innerHTML = rows;
 }
+
+async function analisarVaga() {
+  const jobText = document.getElementById('job-input').value.trim();
+  if (!jobText) { alert('Cole o texto da vaga primeiro.'); return; }
+
+  const btn = document.getElementById('btn-analisar');
+  const resultArea = document.getElementById('result-area');
+
+  btn.disabled = true;
+  btn.textContent = '⏳ Analisando...';
+  resultArea.style.display = 'flex';
+  resultArea.className = 'result-panel';
+  resultArea.innerHTML = '<div class="loading-spinner"><div class="spinner"></div> Analisando a vaga com IA...</div>';
+
+  try {
+    const resp = await fetch('/api/analyze', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ jobText })
+    });
+
+    const data = await resp.json();
+    if (data.error) throw new Error(data.error);
+
+    renderResult(resultArea, data, jobText);
+
+    const vaga = {
+      id: Date.now(),
+      cargo: data.levantamento?.cargo || 'Vaga',
+      empresa: data.levantamento?.empresa || '',
+      modelo: data.levantamento?.modelo || '—',
+      veredito: data.veredito || '',
+      placar: data.placar || {},
+      status: 'SALVA',
+      data: new Date().toLocaleDateString('pt-BR')
+    };
+    vagas.push(vaga);
+    localStorage.setItem('hirefy_vagas', JSON.stringify(vagas));
+    renderJobsList();
+
+  } catch(err) {
+    resultArea.innerHTML = `<div class="card" style="color:var(--red);">❌ Erro: ${err.message}<br><small style="color:var(--muted);">Verifique se a API está configurada corretamente.</small></div>`;
+  } finally {
+    btn.disabled = false;
+    btn.textContent = '⚡ Analisar Vaga';
+  }
+}
+
+function renderResult(area, d, jobText) {
+  const ver = d.veredito || '';
+  const verUpper = ver.toUpperCase();
+  let verClass = 'veredito-ressalvas', verTextClass = 'veredito-text-ressalvas', verIcon = '⚠️';
+  if (verUpper.includes('AGORA')) { verClass='veredito-aplica'; verTextClass='veredito-text-aplica'; verIcon='✅'; }
+  else if (verUpper.includes('NÃO') || verUpper.includes('NAO')) { verClass='veredito-nao'; verTextClass='veredito-text-nao'; verIcon='❌'; }
+
+  const p = d.placar || {};
+  const l = d.levantamento || {};
+  const keywords = (l.keywords||[]).map(k=>`<span class="pill">${k}</span>`).join('');
+  const pros = (d.pros||[]).map(x=>`<div class="pro-item"><span class="pro-dot">✓</span>${x}</div>`).join('');
+  const contras = (d.contras||[]).map(x=>`<div class="pro-item"><span class="contra-dot">✗</span>${x}</div>`).join('');
+  const riscos = (d.riscos||[]).map(x=>`<div style="display:flex;align-items:flex-start;gap:10px;margin-bottom:6px;"><span style="color:var(--yellow);">●</span><span>${x}</span></div>`).join('');
+
+  const cargo = l.cargo || '';
+  const empresa = l.empresa || '';
+  const dorkBase = `${cargo} ${empresa}`.trim() || 'customer support remote';
+
+  const r = d.respostas || {};
+
+  area.innerHTML = `
+    <div class="result-block">
+      <div class="result-block-header"><div class="result-block-label">📌 Resumo em 1 linha</div></div>
+      <div class="result-block-body">${d.resumo||''}</div>
+    </div>
+
+    <div class="result-block">
+      <div class="result-block-header"><div class="result-block-label">⚡ Check Rápido</div></div>
+      <div class="result-block-body">
+        <div style="margin-bottom:8px;"><strong style="color:var(--text);">O que é de verdade?</strong> ${d.check?.oque||''}</div>
+        <div style="margin-bottom:8px;"><strong style="color:var(--text);">Vai exigir o quê?</strong> ${d.check?.exige||''}</div>
+        <div><strong style="color:var(--text);">Vale a pena?</strong> ${d.check?.vale||''}</div>
+      </div>
+    </div>
+
+    <div class="result-block">
+      <div class="result-block-header"><div class="result-block-label">🗂️ Levantamento</div></div>
+      <div class="result-block-body">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:13px;margin-bottom:12px;">
+          <div><span style="color:var(--muted);font-size:11px;display:block;">CARGO</span>${l.cargo||'—'}</div>
+          <div><span style="color:var(--muted);font-size:11px;display:block;">EMPRESA</span>${l.empresa||'—'}</div>
+          <div><span style="color:var(--muted);font-size:11px;display:block;">MODELO</span>${l.modelo||'—'}</div>
+          <div><span style="color:var(--muted);font-size:11px;display:block;">SALÁRIO</span>${l.salario||'—'}</div>
+          <div><span style="color:var(--muted);font-size:11px;display:block;">HORÁRIO</span>${l.horario||'—'}</div>
+          <div><span style="color:var(--muted);font-size:11px;display:block;">CONTRATO</span>${l.contrato||l.modelo||'—'}</div>
+        </div>
+        <span style="color:var(--muted);font-size:11px;display:block;margin-bottom:6px;">PALAVRAS-CHAVE ATS</span>
+        <div>${keywords}</div>
+      </div>
+    </div>
+
+    <div class="result-block">
+      <div class="result-block-header"><div class="result-block-label">🎯 Radar de Compatibilidade</div></div>
+      <div class="result-block-body">
+        <div class="placar-grid">
+          ${[['Aderência Técnica',p.tecnica],['Aderência Comportamental',p.comportamental],['Custo-Benefício',p.custobeneficio],['Esforço Operacional',p.esforco,'var(--green)'],['Potencial Estratégico',p.estrategico],['Bônus Internacional',p.internacional,'var(--accent2)']].map(([label,val,color])=>`
+          <div class="placar-item">
+            <div class="placar-label">${label}</div>
+            <div class="placar-bar-bg"><div class="placar-bar-fill" style="width:${(val||0)*20}%;${color?'background:'+color:''}"></div></div>
+            <div class="placar-score">${val||0}/5</div>
+          </div>`).join('')}
+        </div>
+      </div>
+    </div>
+
+    <div class="result-block">
+      <div class="result-block-header"><div class="result-block-label">⚖️ Prós & Contras</div></div>
+      <div class="result-block-body">
+        <div class="pro-contra">
+          <div>${pros}</div>
+          <div>${contras}</div>
+        </div>
+      </div>
+    </div>
+
+    ${riscos ? `<div class="result-block">
+      <div class="result-block-header"><div class="result-block-label">⚠️ Riscos</div></div>
+      <div class="result-block-body">${riscos}</div>
+    </div>` : ''}
+
+    <div class="result-block">
+      <div class="result-block-header"><div class="result-block-label">🚀 Estratégia</div></div>
+      <div class="result-block-body">${d.estrategia||''}</div>
+    </div>
+
+    <div class="veredito-box ${verClass}">
+      <div class="veredito-icon">${verIcon}</div>
+      <div>
+        <div class="veredito-label">Veredito</div>
+        <div class="${verTextClass}">${ver}</div>
+      </div>
+    </div>
+
+    <div class="apply-actions">
+      <button class="btn btn-primary" onclick="togglePanel('apply-panel')">✅ Vou aplicar — gerar respostas prontas</button>
+      <button class="btn btn-purple" onclick="togglePanel('dorks-panel')">🔍 Buscar vagas similares</button>
+    </div>
+
+    <div id="apply-panel" style="display:none;">
+      <div class="result-block">
+        <div class="result-block-header"><div class="result-block-label">✍️ Respostas Prontas</div></div>
+        <div class="result-block-body" style="display:flex;flex-direction:column;gap:14px;">
+          <div>
+            <div style="font-size:11px;color:var(--muted);margin-bottom:5px;text-transform:uppercase;letter-spacing:.8px;">Apresentação / Tell us about yourself</div>
+            <div class="resposta-box">${r.apresentacao||''}</div>
+            <button class="btn btn-secondary btn-sm" onclick="copiar(this, '${encodeURIComponent(r.apresentacao||'')}')">📋 Copiar</button>
+          </div>
+          <div>
+            <div style="font-size:11px;color:var(--muted);margin-bottom:5px;text-transform:uppercase;letter-spacing:.8px;">Pretensão Salarial</div>
+            <div class="resposta-box">${r.pretensao||''}</div>
+            <button class="btn btn-secondary btn-sm" onclick="copiar(this, '${encodeURIComponent(r.pretensao||'')}')">📋 Copiar</button>
+          </div>
+          <div>
+            <div style="font-size:11px;color:var(--muted);margin-bottom:5px;text-transform:uppercase;letter-spacing:.8px;">Por que quer essa vaga</div>
+            <div class="resposta-box">${r.porquequer||''}</div>
+            <button class="btn btn-secondary btn-sm" onclick="copiar(this, '${encodeURIComponent(r.porquequer||'')}')">📋 Copiar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="dorks-panel" style="display:none;">
+      <div class="result-block">
+        <div class="result-block-header"><div class="result-block-label">🔗 Buscar Vagas Similares</div></div>
+        <div class="result-block-body">
+          ${[
+            [`site:linkedin.com/jobs "${cargo}" "remote" "Latin America" -senior`, `https://www.google.com/search?q=site:linkedin.com/jobs+"${encodeURIComponent(cargo)}"+"remote"+"Latin+America"+-senior`],
+            [`site:greenhouse.io "${cargo}" "remote"`, `https://www.google.com/search?q=site:greenhouse.io+"${encodeURIComponent(cargo)}"+"remote"`],
+            [`site:jobs.lever.co "${cargo}" "remote" "Brazil"`, `https://www.google.com/search?q=site:jobs.lever.co+"${encodeURIComponent(cargo)}"+"remote"+"Brazil"`]
+          ].map(([dork,url])=>`
+          <div class="dork-item">
+            <div class="dork-text">${dork}</div>
+            <a href="${url}" target="_blank" class="btn btn-secondary btn-sm" style="text-decoration:none;">Abrir →</a>
+          </div>`).join('')}
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function togglePanel(id) {
+  const p = document.getElementById(id);
+  if (p) p.style.display = p.style.display === 'none' ? 'block' : 'none';
+}
+
+function copiar(btn, encoded) {
+  const text = decodeURIComponent(encoded);
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = '✅ Copiado!';
+    setTimeout(() => btn.textContent = '📋 Copiar', 2000);
+  });
+}
+
+renderJobsList();
 </script>
 </body>
 </html>
