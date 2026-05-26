@@ -6,7 +6,9 @@ export default async function handler(req, res) {
   const { jobText } = req.body;
   if (!jobText) return res.status(400).json({ error: 'jobText is required' });
 
-  const apiKey = process.env.GROQ_API_KEY;
+  const groqKey = process.env.GROQ_API_KEY;
+  const supabaseUrl = process.env.SUPABASE_URL;
+  const supabaseKey = process.env.SUPABASE_ANON_KEY;
 
   const prompt = `Você é um assistente especialista em carreira e candidaturas. Analise a vaga abaixo com base no perfil do candidato e retorne uma análise completa em português brasileiro.
 
@@ -56,11 +58,12 @@ Retorne APENAS um JSON válido, sem markdown, sem texto fora do JSON:
 }`;
 
   try {
-    const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+    // 1. Chama o Groq
+    const groqResp = await fetch('https://api.groq.com/openai/v1/chat/completions', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${apiKey}`
+        'Authorization': `Bearer ${groqKey}`
       },
       body: JSON.stringify({
         model: 'llama-3.3-70b-versatile',
@@ -70,18 +73,53 @@ Retorne APENAS um JSON válido, sem markdown, sem texto fora do JSON:
       })
     });
 
-    const data = await response.json();
-    if (!response.ok) return res.status(500).json({ error: data.error?.message || 'Groq API error' });
+    const groqData = await groqResp.json();
+    if (!groqResp.ok) return res.status(500).json({ error: groqData.error?.message || 'Groq API error' });
 
-    const text = data.choices?.[0]?.message?.content || '';
+    const text = groqData.choices?.[0]?.message?.content || '';
     const clean = text.replace(/```json|```/g, '').trim();
 
+    let parsed;
     try {
-      const parsed = JSON.parse(clean);
-      return res.status(200).json(parsed);
+      parsed = JSON.parse(clean);
     } catch {
       return res.status(200).json({ raw: clean });
     }
+
+    // 2. Salva no Supabase
+    if (supabaseUrl && supabaseKey) {
+      const l = parsed.levantamento || {};
+      await fetch(`${supabaseUrl}/rest/v1/vagas`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'apikey': supabaseKey,
+          'Authorization': `Bearer ${supabaseKey}`,
+          'Prefer': 'return=minimal'
+        },
+        body: JSON.stringify({
+          cargo: l.cargo || '',
+          empresa: l.empresa || '',
+          local: l.local || '',
+          modelo: l.modelo || '',
+          salario: l.salario || '',
+          veredito: parsed.veredito || '',
+          status: 'SALVA',
+          resumo: parsed.resumo || '',
+          estrategia: parsed.estrategia || '',
+          pros: parsed.pros || [],
+          contras: parsed.contras || [],
+          riscos: parsed.riscos || [],
+          placar: parsed.placar || {},
+          respostas: parsed.respostas || {},
+          keywords: l.keywords || [],
+          texto_vaga: jobText
+        })
+      });
+    }
+
+    return res.status(200).json(parsed);
+
   } catch (err) {
     return res.status(500).json({ error: err.message });
   }
