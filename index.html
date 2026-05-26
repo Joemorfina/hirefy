@@ -102,8 +102,6 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
 .loading-spinner { display: flex; align-items: center; justify-content: center; gap: 12px; padding: 40px; color: var(--muted2); font-size: 14px; }
 .spinner { width: 20px; height: 20px; border: 2px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin 0.8s linear infinite; }
 @keyframes spin { to { transform: rotate(360deg); } }
-@keyframes blink { 0%,100%{opacity:1;} 50%{opacity:0;} }
-.cursor { display: inline-block; width: 2px; height: 14px; background: var(--accent); margin-left: 2px; animation: blink 0.8s infinite; vertical-align: middle; }
 .mobile-header { display: none; }
 .mobile-nav { display: none; }
 @media (max-width: 768px) {
@@ -136,7 +134,7 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
   <div class="nav-item" onclick="showPage('jobs')"><span class="nav-icon">📋</span> Minhas Vagas</div>
   <div class="nav-item" onclick="showPage('profile')"><span class="nav-icon">👤</span> Meu Perfil</div>
   <div style="margin-top:auto;padding:0 24px;">
-    <div style="font-size:11px;color:var(--muted);padding-top:20px;border-top:1px solid var(--border);">v1.1 · HireFy Beta</div>
+    <div style="font-size:11px;color:var(--muted);padding-top:20px;border-top:1px solid var(--border);">v1.2 · HireFy Beta</div>
   </div>
 </nav>
 <div class="main">
@@ -152,10 +150,10 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
   <!-- DASHBOARD -->
   <div class="page active" id="page-dashboard">
     <div class="kpi-grid">
-      <div class="kpi-card lime"><div class="kpi-label">Vagas Analisadas</div><div class="kpi-value" id="kpi-analisadas">0</div><div class="kpi-sub">total</div></div>
-      <div class="kpi-card green"><div class="kpi-label">Aplicações Enviadas</div><div class="kpi-value" id="kpi-aplicadas">0</div><div class="kpi-sub">confirmadas</div></div>
-      <div class="kpi-card yellow"><div class="kpi-label">Aguardando Resposta</div><div class="kpi-value" id="kpi-aguardando">0</div><div class="kpi-sub">em andamento</div></div>
-      <div class="kpi-card purple"><div class="kpi-label">Em Processo</div><div class="kpi-value" id="kpi-processo">0</div><div class="kpi-sub">entrevistas</div></div>
+      <div class="kpi-card lime"><div class="kpi-label">Vagas Analisadas</div><div class="kpi-value" id="kpi-analisadas">—</div><div class="kpi-sub">total</div></div>
+      <div class="kpi-card green"><div class="kpi-label">Aplicações Enviadas</div><div class="kpi-value" id="kpi-aplicadas">—</div><div class="kpi-sub">confirmadas</div></div>
+      <div class="kpi-card yellow"><div class="kpi-label">Aguardando Resposta</div><div class="kpi-value" id="kpi-aguardando">—</div><div class="kpi-sub">em andamento</div></div>
+      <div class="kpi-card purple"><div class="kpi-label">Em Processo</div><div class="kpi-value" id="kpi-processo">—</div><div class="kpi-sub">entrevistas</div></div>
     </div>
     <div class="section-header">
       <div class="section-title">Vagas Recentes</div>
@@ -163,7 +161,7 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
     </div>
     <div class="jobs-table">
       <div class="jobs-table-header"><div>Vaga</div><div>Modelo</div><div>Score</div><div>Veredito</div><div>Status</div></div>
-      <div id="jobs-list"><div style="padding:24px;text-align:center;color:var(--muted);font-size:13px;">Nenhuma vaga analisada ainda. <span style="color:var(--accent);cursor:pointer;" onclick="showPage('analyze')">Analisar agora →</span></div></div>
+      <div id="jobs-list"><div class="loading-spinner"><div class="spinner"></div> Carregando...</div></div>
     </div>
   </div>
 
@@ -189,7 +187,7 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
     </div>
     <div class="jobs-table">
       <div class="jobs-table-header"><div>Vaga</div><div>Modelo</div><div>Score</div><div>Veredito</div><div>Status</div></div>
-      <div id="jobs-list-full"><div style="padding:24px;text-align:center;color:var(--muted);font-size:13px;">Nenhuma vaga ainda.</div></div>
+      <div id="jobs-list-full"><div class="loading-spinner"><div class="spinner"></div> Carregando...</div></div>
     </div>
   </div>
 
@@ -226,7 +224,19 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
 
 <script>
 const titles = { dashboard:'Dashboard', analyze:'Analisar Vaga', jobs:'Minhas Vagas', profile:'Meu Perfil' };
-let vagas = JSON.parse(localStorage.getItem('hirefy_vagas') || '[]');
+let vagasDB = [];
+
+async function carregarVagas() {
+  try {
+    const resp = await fetch('/api/vagas');
+    if (resp.ok) {
+      vagasDB = await resp.json();
+      renderJobsList();
+    }
+  } catch(e) {
+    console.error('Erro ao carregar vagas:', e);
+  }
+}
 
 function showPage(id) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
@@ -237,7 +247,7 @@ function showPage(id) {
   const idx = {dashboard:0,analyze:1,jobs:2,profile:3}[id];
   document.querySelectorAll('.nav-item')[idx].classList.add('active');
   document.querySelectorAll('.mobile-nav-item')[idx].classList.add('active');
-  if (id === 'dashboard' || id === 'jobs') renderJobsList();
+  if (id === 'dashboard' || id === 'jobs') carregarVagas();
 }
 
 function getVeredito(v) {
@@ -258,30 +268,30 @@ function starsHtml(n) {
 function renderJobsList() {
   const list = document.getElementById('jobs-list');
   const listFull = document.getElementById('jobs-list-full');
-  const kpiA = document.getElementById('kpi-analisadas');
-  const kpiAp = document.getElementById('kpi-aplicadas');
-  const kpiAg = document.getElementById('kpi-aguardando');
-  const kpiP = document.getElementById('kpi-processo');
 
-  kpiA.textContent = vagas.length;
-  kpiAp.textContent = vagas.filter(v=>v.status==='APLICADA').length;
-  kpiAg.textContent = vagas.filter(v=>v.status==='AGUARDANDO').length;
-  kpiP.textContent = vagas.filter(v=>v.status==='PROCESSO').length;
+  document.getElementById('kpi-analisadas').textContent = vagasDB.length;
+  document.getElementById('kpi-aplicadas').textContent = vagasDB.filter(v=>v.status==='APLICADA').length;
+  document.getElementById('kpi-aguardando').textContent = vagasDB.filter(v=>v.status==='AGUARDANDO').length;
+  document.getElementById('kpi-processo').textContent = vagasDB.filter(v=>v.status==='PROCESSO').length;
 
   const empty = '<div style="padding:24px;text-align:center;color:var(--muted);font-size:13px;">Nenhuma vaga ainda. <span style="color:var(--accent);cursor:pointer;" onclick="showPage(\'analyze\')">Analisar agora →</span></div>';
 
-  if (!vagas.length) {
+  if (!vagasDB.length) {
     if (list) list.innerHTML = empty;
     if (listFull) listFull.innerHTML = empty;
     return;
   }
 
-  const rows = vagas.slice().reverse().map(v => {
+  const rows = vagasDB.map(v => {
     const ver = getVeredito(v.veredito);
-    const score = v.placar ? Math.round((v.placar.tecnica+v.placar.comportamental+v.placar.estrategico)/3) : 0;
+    const p = v.placar || {};
+    const score = p.tecnica && p.comportamental && p.estrategico
+      ? Math.round((p.tecnica + p.comportamental + p.estrategico) / 3)
+      : 0;
+    const isRemoto = (v.modelo||'').toLowerCase().includes('remoto');
     return `<div class="jobs-table-row">
       <div><div class="job-name">${v.cargo||'Vaga'}</div><div class="job-company">${v.empresa||''}</div></div>
-      <div><span class="badge badge-${v.modelo?.toLowerCase().includes('remoto')?'green':'purple'}">${v.modelo||'—'}</span></div>
+      <div><span class="badge badge-${isRemoto?'green':'purple'}">${v.modelo||'—'}</span></div>
       <div>${starsHtml(score)}</div>
       <div><span class="badge ${ver.cls}">${ver.txt}</span></div>
       <div><span class="badge badge-gray">${v.status||'SALVA'}</span></div>
@@ -316,20 +326,7 @@ async function analisarVaga() {
     if (data.error) throw new Error(data.error);
 
     renderResult(resultArea, data, jobText);
-
-    const vaga = {
-      id: Date.now(),
-      cargo: data.levantamento?.cargo || 'Vaga',
-      empresa: data.levantamento?.empresa || '',
-      modelo: data.levantamento?.modelo || '—',
-      veredito: data.veredito || '',
-      placar: data.placar || {},
-      status: 'SALVA',
-      data: new Date().toLocaleDateString('pt-BR')
-    };
-    vagas.push(vaga);
-    localStorage.setItem('hirefy_vagas', JSON.stringify(vagas));
-    renderJobsList();
+    await carregarVagas();
 
   } catch(err) {
     resultArea.innerHTML = `<div class="card" style="color:var(--red);">❌ Erro: ${err.message}<br><small style="color:var(--muted);">Verifique se a API está configurada corretamente.</small></div>`;
@@ -352,11 +349,7 @@ function renderResult(area, d, jobText) {
   const pros = (d.pros||[]).map(x=>`<div class="pro-item"><span class="pro-dot">✓</span>${x}</div>`).join('');
   const contras = (d.contras||[]).map(x=>`<div class="pro-item"><span class="contra-dot">✗</span>${x}</div>`).join('');
   const riscos = (d.riscos||[]).map(x=>`<div style="display:flex;align-items:flex-start;gap:10px;margin-bottom:6px;"><span style="color:var(--yellow);">●</span><span>${x}</span></div>`).join('');
-
   const cargo = l.cargo || '';
-  const empresa = l.empresa || '';
-  const dorkBase = `${cargo} ${empresa}`.trim() || 'customer support remote';
-
   const r = d.respostas || {};
 
   area.innerHTML = `
@@ -364,7 +357,6 @@ function renderResult(area, d, jobText) {
       <div class="result-block-header"><div class="result-block-label">📌 Resumo em 1 linha</div></div>
       <div class="result-block-body">${d.resumo||''}</div>
     </div>
-
     <div class="result-block">
       <div class="result-block-header"><div class="result-block-label">⚡ Check Rápido</div></div>
       <div class="result-block-body">
@@ -373,7 +365,6 @@ function renderResult(area, d, jobText) {
         <div><strong style="color:var(--text);">Vale a pena?</strong> ${d.check?.vale||''}</div>
       </div>
     </div>
-
     <div class="result-block">
       <div class="result-block-header"><div class="result-block-label">🗂️ Levantamento</div></div>
       <div class="result-block-body">
@@ -389,7 +380,6 @@ function renderResult(area, d, jobText) {
         <div>${keywords}</div>
       </div>
     </div>
-
     <div class="result-block">
       <div class="result-block-header"><div class="result-block-label">🎯 Radar de Compatibilidade</div></div>
       <div class="result-block-body">
@@ -403,46 +393,32 @@ function renderResult(area, d, jobText) {
         </div>
       </div>
     </div>
-
     <div class="result-block">
       <div class="result-block-header"><div class="result-block-label">⚖️ Prós & Contras</div></div>
-      <div class="result-block-body">
-        <div class="pro-contra">
-          <div>${pros}</div>
-          <div>${contras}</div>
-        </div>
-      </div>
+      <div class="result-block-body"><div class="pro-contra"><div>${pros}</div><div>${contras}</div></div></div>
     </div>
-
     ${riscos ? `<div class="result-block">
       <div class="result-block-header"><div class="result-block-label">⚠️ Riscos</div></div>
       <div class="result-block-body">${riscos}</div>
     </div>` : ''}
-
     <div class="result-block">
       <div class="result-block-header"><div class="result-block-label">🚀 Estratégia</div></div>
       <div class="result-block-body">${d.estrategia||''}</div>
     </div>
-
     <div class="veredito-box ${verClass}">
       <div class="veredito-icon">${verIcon}</div>
-      <div>
-        <div class="veredito-label">Veredito</div>
-        <div class="${verTextClass}">${ver}</div>
-      </div>
+      <div><div class="veredito-label">Veredito</div><div class="${verTextClass}">${ver}</div></div>
     </div>
-
     <div class="apply-actions">
       <button class="btn btn-primary" onclick="togglePanel('apply-panel')">✅ Vou aplicar — gerar respostas prontas</button>
       <button class="btn btn-purple" onclick="togglePanel('dorks-panel')">🔍 Buscar vagas similares</button>
     </div>
-
     <div id="apply-panel" style="display:none;">
       <div class="result-block">
         <div class="result-block-header"><div class="result-block-label">✍️ Respostas Prontas</div></div>
         <div class="result-block-body" style="display:flex;flex-direction:column;gap:14px;">
           <div>
-            <div style="font-size:11px;color:var(--muted);margin-bottom:5px;text-transform:uppercase;letter-spacing:.8px;">Apresentação / Tell us about yourself</div>
+            <div style="font-size:11px;color:var(--muted);margin-bottom:5px;text-transform:uppercase;letter-spacing:.8px;">Apresentação</div>
             <div class="resposta-box">${r.apresentacao||''}</div>
             <button class="btn btn-secondary btn-sm" onclick="copiar(this, '${encodeURIComponent(r.apresentacao||'')}')">📋 Copiar</button>
           </div>
@@ -459,18 +435,17 @@ function renderResult(area, d, jobText) {
         </div>
       </div>
     </div>
-
     <div id="dorks-panel" style="display:none;">
       <div class="result-block">
         <div class="result-block-header"><div class="result-block-label">🔗 Buscar Vagas Similares</div></div>
         <div class="result-block-body">
           ${[
-            [`site:linkedin.com/jobs "${cargo}" "remote" "Latin America" -senior`, `https://www.google.com/search?q=site:linkedin.com/jobs+"${encodeURIComponent(cargo)}"+"remote"+"Latin+America"+-senior`],
-            [`site:greenhouse.io "${cargo}" "remote"`, `https://www.google.com/search?q=site:greenhouse.io+"${encodeURIComponent(cargo)}"+"remote"`],
-            [`site:jobs.lever.co "${cargo}" "remote" "Brazil"`, `https://www.google.com/search?q=site:jobs.lever.co+"${encodeURIComponent(cargo)}"+"remote"+"Brazil"`]
-          ].map(([dork,url])=>`
+            [`LinkedIn — "${cargo}" Remote Latin America`, `https://www.google.com/search?q=site:linkedin.com/jobs+"${encodeURIComponent(cargo)}"+"remote"+"Latin+America"+-senior`],
+            [`Greenhouse — "${cargo}" Remote`, `https://www.google.com/search?q=site:greenhouse.io+"${encodeURIComponent(cargo)}"+"remote"`],
+            [`Lever — "${cargo}" Remote Brazil`, `https://www.google.com/search?q=site:jobs.lever.co+"${encodeURIComponent(cargo)}"+"remote"+"Brazil"`]
+          ].map(([label,url])=>`
           <div class="dork-item">
-            <div class="dork-text">${dork}</div>
+            <div class="dork-text">${label}</div>
             <a href="${url}" target="_blank" class="btn btn-secondary btn-sm" style="text-decoration:none;">Abrir →</a>
           </div>`).join('')}
         </div>
@@ -492,7 +467,7 @@ function copiar(btn, encoded) {
   });
 }
 
-renderJobsList();
+carregarVagas();
 </script>
 </body>
 </html>
