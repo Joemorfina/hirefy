@@ -16,6 +16,7 @@ export default async function handler(req, res) {
   const userData = await userResp.json();
   const userId = userData.id;
 
+  // GET — buscar perfil
   if (req.method === 'GET') {
     const resp = await fetch(
       `${supabaseUrl}/rest/v1/profiles?user_id=eq.${userId}&select=*&limit=1`,
@@ -25,10 +26,12 @@ export default async function handler(req, res) {
     return res.status(200).json(Array.isArray(data) ? (data[0] || null) : null);
   }
 
+  // POST — salvar perfil
   if (req.method === 'POST') {
     const { nome, cargo_atual, area, preferencia_modelo, ingles, resumo_perfil } = req.body;
+    const payload = { nome, cargo_atual, area, preferencia_modelo, ingles, resumo_perfil };
 
-    // Sempre faz PATCH (update) — se não existir, faz INSERT
+    // Tenta UPDATE primeiro
     const patchResp = await fetch(
       `${supabaseUrl}/rest/v1/profiles?user_id=eq.${userId}`,
       {
@@ -37,46 +40,45 @@ export default async function handler(req, res) {
           'Content-Type': 'application/json',
           'apikey': supabaseKey,
           'Authorization': `Bearer ${supabaseKey}`,
-          'Prefer': 'return=minimal'
+          'Prefer': 'return=representation'
         },
-        body: JSON.stringify({ nome, cargo_atual, area, preferencia_modelo, ingles, resumo_perfil })
+        body: JSON.stringify(payload)
       }
     );
 
-    if (patchResp.ok) {
-      // Verifica se atualizou algo
-      const countResp = await fetch(
-        `${supabaseUrl}/rest/v1/profiles?user_id=eq.${userId}&select=id`,
-        { headers: { 'apikey': supabaseKey, 'Authorization': `Bearer ${supabaseKey}` } }
-      );
-      const existing = await countResp.json();
+    if (!patchResp.ok) {
+      const err = await patchResp.text();
+      return res.status(500).json({ error: `PATCH failed: ${err}` });
+    }
 
-      if (!Array.isArray(existing) || existing.length === 0) {
-        // Não existia — faz INSERT
-        const insertResp = await fetch(
-          `${supabaseUrl}/rest/v1/profiles`,
-          {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              'apikey': supabaseKey,
-              'Authorization': `Bearer ${supabaseKey}`,
-              'Prefer': 'return=minimal'
-            },
-            body: JSON.stringify({ user_id: userId, nome, cargo_atual, area, preferencia_modelo, ingles, resumo_perfil })
-          }
-        );
-        if (!insertResp.ok) {
-          const err = await insertResp.text();
-          return res.status(500).json({ error: err });
-        }
-      }
+    const patchData = await patchResp.json();
 
+    // Se atualizou algo, retorna sucesso
+    if (Array.isArray(patchData) && patchData.length > 0) {
       return res.status(200).json({ success: true });
     }
 
-    const err = await patchResp.text();
-    return res.status(500).json({ error: err });
+    // Se não existia, faz INSERT
+    const insertResp = await fetch(
+      `${supabaseUrl}/rest/v1/profiles`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'apikey': supabaseKey,
+          'Authorization': `Bearer ${supabaseKey}`,
+          'Prefer': 'return=minimal'
+        },
+        body: JSON.stringify({ user_id: userId, ...payload })
+      }
+    );
+
+    if (!insertResp.ok) {
+      const err = await insertResp.text();
+      return res.status(500).json({ error: `INSERT failed: ${err}` });
+    }
+
+    return res.status(200).json({ success: true });
   }
 
   return res.status(405).json({ error: 'Method not allowed' });
