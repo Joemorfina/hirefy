@@ -10,10 +10,28 @@
   --bg: #0d0d0f; --surface: #16161a; --surface2: #1e1e24;
   --border: #2a2a32; --accent: #c8f135; --accent2: #7c5cfc;
   --text: #f0f0f2; --muted: #6b6b7a; --muted2: #9898aa;
-  --green: #22c55e; --yellow: #f59e0b; --red: #ef4444; --radius: 16px; --radius-sm: 10px;
+  --green: #22c55e; --yellow: #f59e0b; --red: #ef4444;
+  --radius: 16px; --radius-sm: 10px;
 }
 * { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; overflow-x: hidden; }
+body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+
+/* AUTH SCREEN */
+.auth-screen { display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 20px; }
+.auth-box { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 40px; width: 100%; max-width: 420px; }
+.auth-logo { font-family: 'Syne', sans-serif; font-size: 28px; font-weight: 800; text-align: center; margin-bottom: 8px; }
+.auth-logo span { color: var(--accent); }
+.auth-subtitle { text-align: center; color: var(--muted2); font-size: 14px; margin-bottom: 32px; }
+.auth-tabs { display: flex; background: var(--surface2); border-radius: var(--radius-sm); padding: 4px; margin-bottom: 24px; }
+.auth-tab { flex: 1; text-align: center; padding: 8px; font-size: 14px; font-weight: 600; cursor: pointer; border-radius: 8px; color: var(--muted2); transition: all 0.15s; }
+.auth-tab.active { background: var(--accent); color: #000; }
+.form-group { margin-bottom: 16px; }
+.form-label { font-size: 12px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 6px; display: block; }
+.form-input { width: 100%; background: var(--surface2); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 12px 14px; font-size: 14px; color: var(--text); font-family: 'DM Sans', sans-serif; outline: none; transition: border-color 0.15s; }
+.form-input:focus { border-color: var(--accent); }
+.form-error { color: var(--red); font-size: 13px; margin-top: 12px; text-align: center; }
+
+/* APP SHELL */
 .shell { display: flex; min-height: 100vh; }
 .sidebar { width: 220px; background: var(--surface); border-right: 1px solid var(--border); padding: 28px 0; display: flex; flex-direction: column; gap: 4px; position: fixed; height: 100vh; z-index: 10; }
 .logo { font-family: 'Syne', sans-serif; font-size: 22px; font-weight: 800; padding: 0 24px 24px; color: var(--text); }
@@ -25,7 +43,11 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
 .main { margin-left: 220px; flex: 1; }
 .topbar { padding: 20px 32px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; background: var(--bg); position: sticky; top: 0; z-index: 5; }
 .topbar-title { font-family: 'Syne', sans-serif; font-size: 18px; font-weight: 700; }
-.avatar { width: 34px; height: 34px; border-radius: 50%; background: linear-gradient(135deg, var(--accent2), var(--accent)); display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; color: #000; }
+.topbar-right { display: flex; align-items: center; gap: 12px; }
+.user-email { font-size: 12px; color: var(--muted2); }
+.avatar { width: 34px; height: 34px; border-radius: 50%; background: linear-gradient(135deg, var(--accent2), var(--accent)); display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; color: #000; cursor: pointer; }
+.logout-btn { font-size: 12px; color: var(--muted); cursor: pointer; padding: 6px 12px; border: 1px solid var(--border); border-radius: 8px; background: none; font-family: 'DM Sans', sans-serif; transition: all 0.15s; }
+.logout-btn:hover { color: var(--red); border-color: var(--red); }
 .page { display: none; padding: 32px; animation: fadeIn 0.2s ease; }
 .page.active { display: block; }
 @keyframes fadeIn { from { opacity:0; transform:translateY(6px); } to { opacity:1; transform:translateY(0); } }
@@ -91,8 +113,7 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
 .veredito-text-ressalvas { font-family: 'Syne', sans-serif; font-size: 18px; font-weight: 800; color: var(--yellow); }
 .veredito-text-nao { font-family: 'Syne', sans-serif; font-size: 18px; font-weight: 800; color: var(--red); }
 .apply-actions { display: flex; flex-direction: column; gap: 10px; }
-.dork-item { background: var(--surface2); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 12px 14px; font-size: 12px; font-family: monospace; color: var(--accent2); margin-bottom: 8px; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
-.dork-text { flex: 1; word-break: break-all; line-height: 1.5; }
+.dork-item { background: var(--surface2); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 12px 14px; font-size: 13px; color: var(--text); margin-bottom: 8px; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
 .pro-contra { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
 .pro-item { display: flex; align-items: flex-start; gap: 8px; font-size: 13px; color: var(--muted2); margin-bottom: 6px; }
 .pro-dot { color: var(--green); font-weight: 700; }
@@ -102,6 +123,7 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
 .loading-spinner { display: flex; align-items: center; justify-content: center; gap: 12px; padding: 40px; color: var(--muted2); font-size: 14px; }
 .spinner { width: 20px; height: 20px; border: 2px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin 0.8s linear infinite; }
 @keyframes spin { to { transform: rotate(360deg); } }
+.profile-alert { background: rgba(200,241,53,0.07); border: 1px solid var(--accent); border-radius: var(--radius-sm); padding: 14px 16px; margin-bottom: 20px; font-size: 13px; color: var(--accent); }
 .mobile-header { display: none; }
 .mobile-nav { display: none; }
 @media (max-width: 768px) {
@@ -126,6 +148,31 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
 </style>
 </head>
 <body>
+
+<!-- AUTH SCREEN -->
+<div id="auth-screen" class="auth-screen">
+  <div class="auth-box">
+    <div class="auth-logo">Hire<span>Fy</span></div>
+    <div class="auth-subtitle">Sua plataforma de análise estratégica de vagas</div>
+    <div class="auth-tabs">
+      <div class="auth-tab active" onclick="switchTab('login')">Entrar</div>
+      <div class="auth-tab" onclick="switchTab('signup')">Cadastrar</div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Email</label>
+      <input class="form-input" type="email" id="auth-email" placeholder="seu@email.com"/>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Senha</label>
+      <input class="form-input" type="password" id="auth-password" placeholder="Mínimo 6 caracteres"/>
+    </div>
+    <div id="auth-error" class="form-error" style="display:none;"></div>
+    <button class="btn btn-primary" style="margin-top:8px;" id="auth-btn" onclick="doAuth()">Entrar</button>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="app" style="display:none;">
 <div class="shell">
 <nav class="sidebar">
   <div class="logo">Hire<span>Fy</span></div>
@@ -134,17 +181,20 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
   <div class="nav-item" onclick="showPage('jobs')"><span class="nav-icon">📋</span> Minhas Vagas</div>
   <div class="nav-item" onclick="showPage('profile')"><span class="nav-icon">👤</span> Meu Perfil</div>
   <div style="margin-top:auto;padding:0 24px;">
-    <div style="font-size:11px;color:var(--muted);padding-top:20px;border-top:1px solid var(--border);">v1.2 · HireFy Beta</div>
+    <div style="font-size:11px;color:var(--muted);padding-top:20px;border-top:1px solid var(--border);">v1.3 · HireFy Beta</div>
   </div>
 </nav>
 <div class="main">
   <div class="mobile-header">
     <div class="mobile-logo">Hire<span>Fy</span></div>
-    <div class="avatar">BB</div>
+    <button class="logout-btn" onclick="doLogout()">Sair</button>
   </div>
   <div class="topbar">
     <div class="topbar-title" id="page-title">Dashboard</div>
-    <div class="avatar">BB</div>
+    <div class="topbar-right">
+      <span class="user-email" id="user-email-display"></span>
+      <button class="logout-btn" onclick="doLogout()">Sair</button>
+    </div>
   </div>
 
   <!-- DASHBOARD -->
@@ -169,6 +219,9 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
   <div class="page" id="page-analyze">
     <div class="analyze-layout">
       <div style="display:flex;flex-direction:column;gap:16px;">
+        <div id="profile-warning" class="profile-alert" style="display:none;">
+          ⚠️ Você ainda não preencheu seu perfil. <span style="cursor:pointer;text-decoration:underline;" onclick="showPage('profile')">Preencher agora →</span>
+        </div>
         <div class="card">
           <div class="card-title">🔎 Cole a Vaga Aqui</div>
           <textarea class="textarea-field" id="job-input" placeholder="Cole aqui o texto completo da vaga — título, empresa, responsabilidades, requisitos, salário, benefícios..."></textarea>
@@ -196,26 +249,52 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
     <div style="max-width:560px;display:flex;flex-direction:column;gap:16px;">
       <div class="card">
         <div class="card-title">👤 Meu Perfil</div>
-        <div style="display:flex;align-items:center;gap:16px;margin-bottom:20px;">
-          <div class="avatar" style="width:52px;height:52px;font-size:18px;">BB</div>
-          <div>
-            <div style="font-family:'Syne',sans-serif;font-size:17px;font-weight:700;">Bruno Brasileiro</div>
-            <div style="color:var(--muted2);font-size:13px;">Customer Support · São José do Rio Preto, SP</div>
-          </div>
+        <div class="form-group">
+          <label class="form-label">Nome</label>
+          <input class="form-input" type="text" id="p-nome" placeholder="Seu nome completo"/>
         </div>
-        <div style="display:flex;flex-direction:column;gap:10px;font-size:13px;">
-          <div style="display:flex;justify-content:space-between;border-bottom:1px solid var(--border);padding-bottom:10px;"><span style="color:var(--muted);">Inglês</span><span>B2 Upper Intermediate (EF SET 51/100)</span></div>
-          <div style="display:flex;justify-content:space-between;border-bottom:1px solid var(--border);padding-bottom:10px;"><span style="color:var(--muted);">Preferência</span><span>Remoto / Híbrido leve</span></div>
-          <div style="display:flex;justify-content:space-between;border-bottom:1px solid var(--border);padding-bottom:10px;"><span style="color:var(--muted);">Modalidade</span><span>CLT ou Contractor</span></div>
-          <div style="display:flex;justify-content:space-between;"><span style="color:var(--muted);">Foco atual</span><span>Vagas internacionais</span></div>
+        <div class="form-group">
+          <label class="form-label">Cargo atual ou desejado</label>
+          <input class="form-input" type="text" id="p-cargo" placeholder="Ex: Customer Support Specialist"/>
         </div>
+        <div class="form-group">
+          <label class="form-label">Área de atuação</label>
+          <input class="form-input" type="text" id="p-area" placeholder="Ex: Atendimento ao Cliente, Backoffice"/>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Preferência de modelo</label>
+          <select class="form-input" id="p-modelo">
+            <option value="Remoto">Remoto</option>
+            <option value="Híbrido">Híbrido</option>
+            <option value="Presencial">Presencial</option>
+            <option value="Qualquer">Qualquer</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Nível de inglês</label>
+          <select class="form-input" id="p-ingles">
+            <option value="Nenhum">Nenhum</option>
+            <option value="Básico">Básico</option>
+            <option value="Intermediário">Intermediário</option>
+            <option value="B2 Upper Intermediate">B2 Upper Intermediate</option>
+            <option value="Avançado">Avançado</option>
+            <option value="Fluente">Fluente</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Resumo do seu perfil</label>
+          <textarea class="textarea-field" id="p-resumo" style="min-height:100px;" placeholder="Descreva brevemente sua experiência, pontos fortes e o que busca. Quanto mais detalhado, melhor a análise de vagas."></textarea>
+        </div>
+        <button class="btn btn-primary" onclick="salvarPerfil()">💾 Salvar Perfil</button>
+        <div id="profile-msg" style="display:none;margin-top:12px;font-size:13px;text-align:center;"></div>
       </div>
     </div>
   </div>
 </div>
 </div>
+</div>
 
-<div class="mobile-nav">
+<div class="mobile-nav" id="mobile-nav" style="display:none;">
   <div class="mobile-nav-item active" onclick="showPage('dashboard')"><div class="mobile-nav-icon">⬛</div>Dashboard</div>
   <div class="mobile-nav-item" onclick="showPage('analyze')"><div class="mobile-nav-icon">🔍</div>Analisar</div>
   <div class="mobile-nav-item" onclick="showPage('jobs')"><div class="mobile-nav-icon">📋</div>Vagas</div>
@@ -224,18 +303,158 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
 
 <script>
 const titles = { dashboard:'Dashboard', analyze:'Analisar Vaga', jobs:'Minhas Vagas', profile:'Meu Perfil' };
+let currentToken = localStorage.getItem('hirefy_token') || null;
+let currentUser = JSON.parse(localStorage.getItem('hirefy_user') || 'null');
 let vagasDB = [];
+let userProfile = null;
+let currentAuthMode = 'login';
 
-async function carregarVagas() {
+// ── AUTH ──────────────────────────────────────────────
+function switchTab(mode) {
+  currentAuthMode = mode;
+  document.querySelectorAll('.auth-tab').forEach((t,i) => {
+    t.classList.toggle('active', (mode==='login' && i===0) || (mode==='signup' && i===1));
+  });
+  document.getElementById('auth-btn').textContent = mode === 'login' ? 'Entrar' : 'Cadastrar';
+  document.getElementById('auth-error').style.display = 'none';
+}
+
+async function doAuth() {
+  const email = document.getElementById('auth-email').value.trim();
+  const password = document.getElementById('auth-password').value;
+  const errEl = document.getElementById('auth-error');
+  const btn = document.getElementById('auth-btn');
+
+  if (!email || !password) { errEl.textContent = 'Preencha email e senha.'; errEl.style.display='block'; return; }
+
+  btn.disabled = true;
+  btn.textContent = '⏳ Aguarde...';
+  errEl.style.display = 'none';
+
   try {
-    const resp = await fetch('/api/vagas');
+    const resp = await fetch('/api/auth', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: currentAuthMode, email, password })
+    });
+    const data = await resp.json();
+
+    if (!resp.ok) { errEl.textContent = data.error || 'Erro ao autenticar'; errEl.style.display='block'; return; }
+
+    currentToken = data.access_token;
+    currentUser = data.user;
+    localStorage.setItem('hirefy_token', currentToken);
+    localStorage.setItem('hirefy_user', JSON.stringify(currentUser));
+    initApp();
+
+  } catch(e) {
+    errEl.textContent = 'Erro de conexão. Tente novamente.';
+    errEl.style.display = 'block';
+  } finally {
+    btn.disabled = false;
+    btn.textContent = currentAuthMode === 'login' ? 'Entrar' : 'Cadastrar';
+  }
+}
+
+function doLogout() {
+  localStorage.removeItem('hirefy_token');
+  localStorage.removeItem('hirefy_user');
+  currentToken = null; currentUser = null; userProfile = null;
+  document.getElementById('app').style.display = 'none';
+  document.getElementById('auth-screen').style.display = 'flex';
+  document.getElementById('mobile-nav').style.display = 'none';
+}
+
+// ── INIT APP ──────────────────────────────────────────
+async function initApp() {
+  document.getElementById('auth-screen').style.display = 'none';
+  document.getElementById('app').style.display = 'block';
+  document.getElementById('mobile-nav').style.display = 'flex';
+  if (currentUser?.email) {
+    document.getElementById('user-email-display').textContent = currentUser.email;
+  }
+  await carregarPerfil();
+  await carregarVagas();
+}
+
+// ── PERFIL ────────────────────────────────────────────
+async function carregarPerfil() {
+  try {
+    const resp = await fetch('/api/profile', {
+      headers: { 'Authorization': `Bearer ${currentToken}` }
+    });
     if (resp.ok) {
-      vagasDB = await resp.json();
-      renderJobsList();
+      userProfile = await resp.json();
+      if (userProfile) {
+        document.getElementById('p-nome').value = userProfile.nome || '';
+        document.getElementById('p-cargo').value = userProfile.cargo_atual || '';
+        document.getElementById('p-area').value = userProfile.area || '';
+        document.getElementById('p-modelo').value = userProfile.preferencia_modelo || 'Remoto';
+        document.getElementById('p-ingles').value = userProfile.ingles || 'Intermediário';
+        document.getElementById('p-resumo').value = userProfile.resumo_perfil || '';
+      }
+    }
+  } catch(e) { console.error('Erro perfil:', e); }
+  checkProfileWarning();
+}
+
+function checkProfileWarning() {
+  const warn = document.getElementById('profile-warning');
+  if (!userProfile || !userProfile.resumo_perfil) {
+    warn.style.display = 'block';
+  } else {
+    warn.style.display = 'none';
+  }
+}
+
+async function salvarPerfil() {
+  const btn = document.querySelector('#page-profile .btn-primary');
+  const msg = document.getElementById('profile-msg');
+  btn.disabled = true; btn.textContent = '⏳ Salvando...';
+
+  try {
+    const resp = await fetch('/api/profile', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${currentToken}` },
+      body: JSON.stringify({
+        nome: document.getElementById('p-nome').value,
+        cargo_atual: document.getElementById('p-cargo').value,
+        area: document.getElementById('p-area').value,
+        preferencia_modelo: document.getElementById('p-modelo').value,
+        ingles: document.getElementById('p-ingles').value,
+        resumo_perfil: document.getElementById('p-resumo').value
+      })
+    });
+
+    if (resp.ok) {
+      msg.textContent = '✅ Perfil salvo com sucesso!';
+      msg.style.color = 'var(--green)';
+      msg.style.display = 'block';
+      await carregarPerfil();
+    } else {
+      msg.textContent = '❌ Erro ao salvar. Tente novamente.';
+      msg.style.color = 'var(--red)';
+      msg.style.display = 'block';
     }
   } catch(e) {
-    console.error('Erro ao carregar vagas:', e);
+    msg.textContent = '❌ Erro de conexão.';
+    msg.style.color = 'var(--red)';
+    msg.style.display = 'block';
+  } finally {
+    btn.disabled = false;
+    btn.textContent = '💾 Salvar Perfil';
+    setTimeout(() => msg.style.display = 'none', 3000);
   }
+}
+
+// ── VAGAS ─────────────────────────────────────────────
+async function carregarVagas() {
+  try {
+    const resp = await fetch('/api/vagas', {
+      headers: { 'Authorization': `Bearer ${currentToken}` }
+    });
+    if (resp.ok) { vagasDB = await resp.json(); renderJobsList(); }
+  } catch(e) { console.error('Erro vagas:', e); }
 }
 
 function showPage(id) {
@@ -248,6 +467,7 @@ function showPage(id) {
   document.querySelectorAll('.nav-item')[idx].classList.add('active');
   document.querySelectorAll('.mobile-nav-item')[idx].classList.add('active');
   if (id === 'dashboard' || id === 'jobs') carregarVagas();
+  if (id === 'analyze') checkProfileWarning();
 }
 
 function getVeredito(v) {
@@ -268,206 +488,165 @@ function starsHtml(n) {
 function renderJobsList() {
   const list = document.getElementById('jobs-list');
   const listFull = document.getElementById('jobs-list-full');
-
   document.getElementById('kpi-analisadas').textContent = vagasDB.length;
   document.getElementById('kpi-aplicadas').textContent = vagasDB.filter(v=>v.status==='APLICADA').length;
   document.getElementById('kpi-aguardando').textContent = vagasDB.filter(v=>v.status==='AGUARDANDO').length;
   document.getElementById('kpi-processo').textContent = vagasDB.filter(v=>v.status==='PROCESSO').length;
 
   const empty = '<div style="padding:24px;text-align:center;color:var(--muted);font-size:13px;">Nenhuma vaga ainda. <span style="color:var(--accent);cursor:pointer;" onclick="showPage(\'analyze\')">Analisar agora →</span></div>';
-
-  if (!vagasDB.length) {
-    if (list) list.innerHTML = empty;
-    if (listFull) listFull.innerHTML = empty;
-    return;
-  }
+  if (!vagasDB.length) { if(list)list.innerHTML=empty; if(listFull)listFull.innerHTML=empty; return; }
 
   const rows = vagasDB.map(v => {
     const ver = getVeredito(v.veredito);
     const p = v.placar || {};
-    const score = p.tecnica && p.comportamental && p.estrategico
-      ? Math.round((p.tecnica + p.comportamental + p.estrategico) / 3)
-      : 0;
-    const isRemoto = (v.modelo||'').toLowerCase().includes('remoto');
+    const score = p.tecnica && p.comportamental && p.estrategico ? Math.round((p.tecnica+p.comportamental+p.estrategico)/3) : 0;
     return `<div class="jobs-table-row">
       <div><div class="job-name">${v.cargo||'Vaga'}</div><div class="job-company">${v.empresa||''}</div></div>
-      <div><span class="badge badge-${isRemoto?'green':'purple'}">${v.modelo||'—'}</span></div>
+      <div><span class="badge badge-${(v.modelo||'').toLowerCase().includes('remoto')?'green':'purple'}">${v.modelo||'—'}</span></div>
       <div>${starsHtml(score)}</div>
       <div><span class="badge ${ver.cls}">${ver.txt}</span></div>
       <div><span class="badge badge-gray">${v.status||'SALVA'}</span></div>
     </div>`;
   }).join('');
-
-  if (list) list.innerHTML = rows;
-  if (listFull) listFull.innerHTML = rows;
+  if(list)list.innerHTML=rows; if(listFull)listFull.innerHTML=rows;
 }
 
+// ── ANALISAR ──────────────────────────────────────────
 async function analisarVaga() {
   const jobText = document.getElementById('job-input').value.trim();
   if (!jobText) { alert('Cole o texto da vaga primeiro.'); return; }
 
   const btn = document.getElementById('btn-analisar');
   const resultArea = document.getElementById('result-area');
-
-  btn.disabled = true;
-  btn.textContent = '⏳ Analisando...';
+  btn.disabled = true; btn.textContent = '⏳ Analisando...';
   resultArea.style.display = 'flex';
   resultArea.className = 'result-panel';
-  resultArea.innerHTML = '<div class="loading-spinner"><div class="spinner"></div> Analisando a vaga com IA...</div>';
+  resultArea.innerHTML = '<div class="loading-spinner"><div class="spinner"></div> Analisando com IA...</div>';
+
+  const perfil = userProfile ? `
+Nome: ${userProfile.nome || ''}
+Cargo atual: ${userProfile.cargo_atual || ''}
+Área: ${userProfile.area || ''}
+Preferência: ${userProfile.preferencia_modelo || ''}
+Inglês: ${userProfile.ingles || ''}
+Perfil: ${userProfile.resumo_perfil || ''}` : 'Perfil não preenchido — usar análise genérica.';
 
   try {
     const resp = await fetch('/api/analyze', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ jobText })
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${currentToken}` },
+      body: JSON.stringify({ jobText, perfilUsuario: perfil })
     });
-
     const data = await resp.json();
     if (data.error) throw new Error(data.error);
-
-    renderResult(resultArea, data, jobText);
+    renderResult(resultArea, data);
     await carregarVagas();
-
   } catch(err) {
-    resultArea.innerHTML = `<div class="card" style="color:var(--red);">❌ Erro: ${err.message}<br><small style="color:var(--muted);">Verifique se a API está configurada corretamente.</small></div>`;
+    resultArea.innerHTML = `<div class="card" style="color:var(--red);">❌ Erro: ${err.message}</div>`;
   } finally {
-    btn.disabled = false;
-    btn.textContent = '⚡ Analisar Vaga';
+    btn.disabled = false; btn.textContent = '⚡ Analisar Vaga';
   }
 }
 
-function renderResult(area, d, jobText) {
+function renderResult(area, d) {
   const ver = d.veredito || '';
   const verUpper = ver.toUpperCase();
   let verClass = 'veredito-ressalvas', verTextClass = 'veredito-text-ressalvas', verIcon = '⚠️';
   if (verUpper.includes('AGORA')) { verClass='veredito-aplica'; verTextClass='veredito-text-aplica'; verIcon='✅'; }
-  else if (verUpper.includes('NÃO') || verUpper.includes('NAO')) { verClass='veredito-nao'; verTextClass='veredito-text-nao'; verIcon='❌'; }
+  else if (verUpper.includes('NÃO')||verUpper.includes('NAO')) { verClass='veredito-nao'; verTextClass='veredito-text-nao'; verIcon='❌'; }
 
-  const p = d.placar || {};
-  const l = d.levantamento || {};
+  const p = d.placar||{}, l = d.levantamento||{}, r = d.respostas||{};
   const keywords = (l.keywords||[]).map(k=>`<span class="pill">${k}</span>`).join('');
   const pros = (d.pros||[]).map(x=>`<div class="pro-item"><span class="pro-dot">✓</span>${x}</div>`).join('');
   const contras = (d.contras||[]).map(x=>`<div class="pro-item"><span class="contra-dot">✗</span>${x}</div>`).join('');
   const riscos = (d.riscos||[]).map(x=>`<div style="display:flex;align-items:flex-start;gap:10px;margin-bottom:6px;"><span style="color:var(--yellow);">●</span><span>${x}</span></div>`).join('');
-  const cargo = l.cargo || '';
-  const r = d.respostas || {};
+  const cargo = l.cargo||'';
 
   area.innerHTML = `
-    <div class="result-block">
-      <div class="result-block-header"><div class="result-block-label">📌 Resumo em 1 linha</div></div>
-      <div class="result-block-body">${d.resumo||''}</div>
-    </div>
-    <div class="result-block">
-      <div class="result-block-header"><div class="result-block-label">⚡ Check Rápido</div></div>
-      <div class="result-block-body">
-        <div style="margin-bottom:8px;"><strong style="color:var(--text);">O que é de verdade?</strong> ${d.check?.oque||''}</div>
-        <div style="margin-bottom:8px;"><strong style="color:var(--text);">Vai exigir o quê?</strong> ${d.check?.exige||''}</div>
-        <div><strong style="color:var(--text);">Vale a pena?</strong> ${d.check?.vale||''}</div>
+    <div class="result-block"><div class="result-block-header"><div class="result-block-label">📌 Resumo em 1 linha</div></div><div class="result-block-body">${d.resumo||''}</div></div>
+    <div class="result-block"><div class="result-block-header"><div class="result-block-label">⚡ Check Rápido</div></div>
+    <div class="result-block-body">
+      <div style="margin-bottom:8px;"><strong style="color:var(--text);">O que é de verdade?</strong> ${d.check?.oque||''}</div>
+      <div style="margin-bottom:8px;"><strong style="color:var(--text);">Vai exigir o quê?</strong> ${d.check?.exige||''}</div>
+      <div><strong style="color:var(--text);">Vale a pena?</strong> ${d.check?.vale||''}</div>
+    </div></div>
+    <div class="result-block"><div class="result-block-header"><div class="result-block-label">🗂️ Levantamento</div></div>
+    <div class="result-block-body">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:13px;margin-bottom:12px;">
+        <div><span style="color:var(--muted);font-size:11px;display:block;">CARGO</span>${l.cargo||'—'}</div>
+        <div><span style="color:var(--muted);font-size:11px;display:block;">EMPRESA</span>${l.empresa||'—'}</div>
+        <div><span style="color:var(--muted);font-size:11px;display:block;">MODELO</span>${l.modelo||'—'}</div>
+        <div><span style="color:var(--muted);font-size:11px;display:block;">SALÁRIO</span>${l.salario||'—'}</div>
+        <div><span style="color:var(--muted);font-size:11px;display:block;">HORÁRIO</span>${l.horario||'—'}</div>
+        <div><span style="color:var(--muted);font-size:11px;display:block;">LOCAL</span>${l.local||'—'}</div>
       </div>
-    </div>
-    <div class="result-block">
-      <div class="result-block-header"><div class="result-block-label">🗂️ Levantamento</div></div>
-      <div class="result-block-body">
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:13px;margin-bottom:12px;">
-          <div><span style="color:var(--muted);font-size:11px;display:block;">CARGO</span>${l.cargo||'—'}</div>
-          <div><span style="color:var(--muted);font-size:11px;display:block;">EMPRESA</span>${l.empresa||'—'}</div>
-          <div><span style="color:var(--muted);font-size:11px;display:block;">MODELO</span>${l.modelo||'—'}</div>
-          <div><span style="color:var(--muted);font-size:11px;display:block;">SALÁRIO</span>${l.salario||'—'}</div>
-          <div><span style="color:var(--muted);font-size:11px;display:block;">HORÁRIO</span>${l.horario||'—'}</div>
-          <div><span style="color:var(--muted);font-size:11px;display:block;">CONTRATO</span>${l.contrato||l.modelo||'—'}</div>
-        </div>
-        <span style="color:var(--muted);font-size:11px;display:block;margin-bottom:6px;">PALAVRAS-CHAVE ATS</span>
-        <div>${keywords}</div>
-      </div>
-    </div>
-    <div class="result-block">
-      <div class="result-block-header"><div class="result-block-label">🎯 Radar de Compatibilidade</div></div>
-      <div class="result-block-body">
-        <div class="placar-grid">
-          ${[['Aderência Técnica',p.tecnica],['Aderência Comportamental',p.comportamental],['Custo-Benefício',p.custobeneficio],['Esforço Operacional',p.esforco,'var(--green)'],['Potencial Estratégico',p.estrategico],['Bônus Internacional',p.internacional,'var(--accent2)']].map(([label,val,color])=>`
-          <div class="placar-item">
-            <div class="placar-label">${label}</div>
-            <div class="placar-bar-bg"><div class="placar-bar-fill" style="width:${(val||0)*20}%;${color?'background:'+color:''}"></div></div>
-            <div class="placar-score">${val||0}/5</div>
-          </div>`).join('')}
-        </div>
-      </div>
-    </div>
-    <div class="result-block">
-      <div class="result-block-header"><div class="result-block-label">⚖️ Prós & Contras</div></div>
-      <div class="result-block-body"><div class="pro-contra"><div>${pros}</div><div>${contras}</div></div></div>
-    </div>
-    ${riscos ? `<div class="result-block">
-      <div class="result-block-header"><div class="result-block-label">⚠️ Riscos</div></div>
-      <div class="result-block-body">${riscos}</div>
-    </div>` : ''}
-    <div class="result-block">
-      <div class="result-block-header"><div class="result-block-label">🚀 Estratégia</div></div>
-      <div class="result-block-body">${d.estrategia||''}</div>
-    </div>
-    <div class="veredito-box ${verClass}">
-      <div class="veredito-icon">${verIcon}</div>
-      <div><div class="veredito-label">Veredito</div><div class="${verTextClass}">${ver}</div></div>
-    </div>
+      <span style="color:var(--muted);font-size:11px;display:block;margin-bottom:6px;">PALAVRAS-CHAVE ATS</span>
+      <div>${keywords}</div>
+    </div></div>
+    <div class="result-block"><div class="result-block-header"><div class="result-block-label">🎯 Radar de Compatibilidade</div></div>
+    <div class="result-block-body"><div class="placar-grid">
+      ${[['Aderência Técnica',p.tecnica],['Aderência Comportamental',p.comportamental],['Custo-Benefício',p.custobeneficio],['Esforço Operacional',p.esforco,'var(--green)'],['Potencial Estratégico',p.estrategico],['Bônus Internacional',p.internacional,'var(--accent2)']].map(([label,val,color])=>`
+      <div class="placar-item"><div class="placar-label">${label}</div>
+      <div class="placar-bar-bg"><div class="placar-bar-fill" style="width:${(val||0)*20}%;${color?'background:'+color:''}"></div></div>
+      <div class="placar-score">${val||0}/5</div></div>`).join('')}
+    </div></div></div>
+    <div class="result-block"><div class="result-block-header"><div class="result-block-label">⚖️ Prós & Contras</div></div>
+    <div class="result-block-body"><div class="pro-contra"><div>${pros}</div><div>${contras}</div></div></div></div>
+    ${riscos?`<div class="result-block"><div class="result-block-header"><div class="result-block-label">⚠️ Riscos</div></div><div class="result-block-body">${riscos}</div></div>`:''}
+    <div class="result-block"><div class="result-block-header"><div class="result-block-label">🚀 Estratégia</div></div><div class="result-block-body">${d.estrategia||''}</div></div>
+    <div class="veredito-box ${verClass}"><div class="veredito-icon">${verIcon}</div>
+    <div><div class="veredito-label">Veredito</div><div class="${verTextClass}">${ver}</div></div></div>
     <div class="apply-actions">
       <button class="btn btn-primary" onclick="togglePanel('apply-panel')">✅ Vou aplicar — gerar respostas prontas</button>
       <button class="btn btn-purple" onclick="togglePanel('dorks-panel')">🔍 Buscar vagas similares</button>
     </div>
-    <div id="apply-panel" style="display:none;">
-      <div class="result-block">
-        <div class="result-block-header"><div class="result-block-label">✍️ Respostas Prontas</div></div>
-        <div class="result-block-body" style="display:flex;flex-direction:column;gap:14px;">
-          <div>
-            <div style="font-size:11px;color:var(--muted);margin-bottom:5px;text-transform:uppercase;letter-spacing:.8px;">Apresentação</div>
-            <div class="resposta-box">${r.apresentacao||''}</div>
-            <button class="btn btn-secondary btn-sm" onclick="copiar(this, '${encodeURIComponent(r.apresentacao||'')}')">📋 Copiar</button>
-          </div>
-          <div>
-            <div style="font-size:11px;color:var(--muted);margin-bottom:5px;text-transform:uppercase;letter-spacing:.8px;">Pretensão Salarial</div>
-            <div class="resposta-box">${r.pretensao||''}</div>
-            <button class="btn btn-secondary btn-sm" onclick="copiar(this, '${encodeURIComponent(r.pretensao||'')}')">📋 Copiar</button>
-          </div>
-          <div>
-            <div style="font-size:11px;color:var(--muted);margin-bottom:5px;text-transform:uppercase;letter-spacing:.8px;">Por que quer essa vaga</div>
-            <div class="resposta-box">${r.porquequer||''}</div>
-            <button class="btn btn-secondary btn-sm" onclick="copiar(this, '${encodeURIComponent(r.porquequer||'')}')">📋 Copiar</button>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div id="dorks-panel" style="display:none;">
-      <div class="result-block">
-        <div class="result-block-header"><div class="result-block-label">🔗 Buscar Vagas Similares</div></div>
-        <div class="result-block-body">
-          ${[
-            [`LinkedIn — "${cargo}" Remote Latin America`, `https://www.google.com/search?q=site:linkedin.com/jobs+"${encodeURIComponent(cargo)}"+"remote"+"Latin+America"+-senior`],
-            [`Greenhouse — "${cargo}" Remote`, `https://www.google.com/search?q=site:greenhouse.io+"${encodeURIComponent(cargo)}"+"remote"`],
-            [`Lever — "${cargo}" Remote Brazil`, `https://www.google.com/search?q=site:jobs.lever.co+"${encodeURIComponent(cargo)}"+"remote"+"Brazil"`]
+    <div id="apply-panel" style="display:none;"><div class="result-block">
+      <div class="result-block-header"><div class="result-block-label">✍️ Respostas Prontas</div></div>
+      <div class="result-block-body" style="display:flex;flex-direction:column;gap:14px;">
+        <div><div style="font-size:11px;color:var(--muted);margin-bottom:5px;text-transform:uppercase;letter-spacing:.8px;">Apresentação</div>
+        <div class="resposta-box">${r.apresentacao||''}</div>
+        <button class="btn btn-secondary btn-sm" onclick="copiar(this,'${encodeURIComponent(r.apresentacao||'')}')">📋 Copiar</button></div>
+        <div><div style="font-size:11px;color:var(--muted);margin-bottom:5px;text-transform:uppercase;letter-spacing:.8px;">Pretensão Salarial</div>
+        <div class="resposta-box">${r.pretensao||''}</div>
+        <button class="btn btn-secondary btn-sm" onclick="copiar(this,'${encodeURIComponent(r.pretensao||'')}')">📋 Copiar</button></div>
+        <div><div style="font-size:11px;color:var(--muted);margin-bottom:5px;text-transform:uppercase;letter-spacing:.8px;">Por que quer essa vaga</div>
+        <div class="resposta-box">${r.porquequer||''}</div>
+        <button class="btn btn-secondary btn-sm" onclick="copiar(this,'${encodeURIComponent(r.porquequer||'')}')">📋 Copiar</button></div>
+      </div></div></div>
+    <div id="dorks-panel" style="display:none;"><div class="result-block">
+      <div class="result-block-header"><div class="result-block-label">🔗 Buscar Vagas Similares</div></div>
+      <div class="result-block-body">
+        ${[['LinkedIn',`https://www.linkedin.com/jobs/search/?keywords=${encodeURIComponent(cargo)}&f_WT=2`],
+           ['Gupy',`https://portal.gupy.io/job-search/term=${encodeURIComponent(cargo)}`],
+           ['Greenhouse',`https://www.google.com/search?q=site:greenhouse.io+"${encodeURIComponent(cargo)}"+"remote"`],
+           ['Lever',`https://www.google.com/search?q=site:jobs.lever.co+"${encodeURIComponent(cargo)}"+"remote"`],
+           ['Indeed',`https://br.indeed.com/jobs?q=${encodeURIComponent(cargo)}&l=Remote`],
+           ['Google Jobs',`https://www.google.com/search?q=${encodeURIComponent(cargo)}+vaga+remota&ibp=htl;jobs`]
           ].map(([label,url])=>`
-          <div class="dork-item">
-            <div class="dork-text">${label}</div>
-            <a href="${url}" target="_blank" class="btn btn-secondary btn-sm" style="text-decoration:none;">Abrir →</a>
-          </div>`).join('')}
-        </div>
-      </div>
-    </div>
+        <div class="dork-item">
+          <div class="dork-text">🔍 ${label} — ${cargo}</div>
+          <a href="${url}" target="_blank" class="btn btn-secondary btn-sm" style="text-decoration:none;">Abrir →</a>
+        </div>`).join('')}
+      </div></div></div>
   `;
 }
 
 function togglePanel(id) {
   const p = document.getElementById(id);
-  if (p) p.style.display = p.style.display === 'none' ? 'block' : 'none';
+  if(p) p.style.display = p.style.display==='none'?'block':'none';
 }
 
 function copiar(btn, encoded) {
-  const text = decodeURIComponent(encoded);
-  navigator.clipboard.writeText(text).then(() => {
+  navigator.clipboard.writeText(decodeURIComponent(encoded)).then(() => {
     btn.textContent = '✅ Copiado!';
     setTimeout(() => btn.textContent = '📋 Copiar', 2000);
   });
 }
 
-carregarVagas();
+// ── START ─────────────────────────────────────────────
+if (currentToken) {
+  initApp();
+}
 </script>
 </body>
 </html>
