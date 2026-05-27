@@ -6,79 +6,107 @@ export default async function handler(req, res) {
     return res.status(500).json({ error: 'Supabase not configured' });
   }
 
+  // Pega o token do usuário logado
   const token = req.headers.authorization?.replace('Bearer ', '');
   if (!token) return res.status(401).json({ error: 'Token não fornecido' });
 
+  // Valida o token e pega o userId
   const userResp = await fetch(`${supabaseUrl}/auth/v1/user`, {
-    headers: { 'apikey': supabaseKey, 'Authorization': `Bearer ${token}` }
+    headers: {
+      'apikey': supabaseKey,
+      'Authorization': `Bearer ${token}`
+    }
   });
   if (!userResp.ok) return res.status(401).json({ error: 'Token inválido' });
+
   const userData = await userResp.json();
   const userId = userData.id;
 
-  // GET — buscar perfil
+  // ─── GET: buscar perfil ───────────────────────────────────────────────────
   if (req.method === 'GET') {
     const resp = await fetch(
       `${supabaseUrl}/rest/v1/profiles?user_id=eq.${userId}&select=*&limit=1`,
-      { headers: { 'apikey': supabaseKey, 'Authorization': `Bearer ${supabaseKey}` } }
+      {
+        headers: {
+          'apikey': supabaseKey,
+          'Authorization': `Bearer ${token}` // token do usuário, não a anon key
+        }
+      }
     );
     const data = await resp.json();
     return res.status(200).json(Array.isArray(data) ? (data[0] || null) : null);
   }
 
-  // POST — salvar perfil
+  // ─── POST: salvar perfil (upsert manual) ─────────────────────────────────
   if (req.method === 'POST') {
     const { nome, cargo_atual, area, preferencia_modelo, ingles, resumo_perfil } = req.body;
     const payload = { nome, cargo_atual, area, preferencia_modelo, ingles, resumo_perfil };
 
-    // Tenta UPDATE primeiro
-    const patchResp = await fetch(
-      `${supabaseUrl}/rest/v1/profiles?user_id=eq.${userId}`,
+    // PASSO 1: verificar se já existe um perfil para esse user_id
+    const checkResp = await fetch(
+      `${supabaseUrl}/rest/v1/profiles?user_id=eq.${userId}&select=id&limit=1`,
       {
-        method: 'PATCH',
         headers: {
-          'Content-Type': 'application/json',
           'apikey': supabaseKey,
-          'Authorization': `Bearer ${supabaseKey}`,
-          'Prefer': 'return=representation'
-        },
-        body: JSON.stringify(payload)
+          'Authorization': `Bearer ${token}` // token do usuário
+        }
       }
     );
 
-    if (!patchResp.ok) {
-      const err = await patchResp.text();
-      return res.status(500).json({ error: `PATCH failed: ${err}` });
+    if (!checkResp.ok) {
+      const err = await checkResp.text();
+      return res.status(500).json({ error: `Erro ao verificar perfil: ${err}` });
     }
 
-    const patchData = await patchResp.json();
+    const checkData = await checkResp.json();
+    const profileExists = Array.isArray(checkData) && checkData.length > 0;
 
-    // Se atualizou algo, retorna sucesso
-    if (Array.isArray(patchData) && patchData.length > 0) {
-      return res.status(200).json({ success: true });
-    }
+    if (profileExists) {
+      // PASSO 2a: perfil existe → faz PATCH (update)
+      const patchResp = await fetch(
+        `${supabaseUrl}/rest/v1/profiles?user_id=eq.${userId}`,
+        {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json',
+            'apikey': supabaseKey,
+            'Authorization': `Bearer ${token}`, // token do usuário
+            'Prefer': 'return=minimal'
+          },
+          body: JSON.stringify(payload)
+        }
+      );
 
-    // Se não existia, faz INSERT
-    const insertResp = await fetch(
-      `${supabaseUrl}/rest/v1/profiles`,
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'apikey': supabaseKey,
-          'Authorization': `Bearer ${supabaseKey}`,
-          'Prefer': 'return=minimal'
-        },
-        body: JSON.stringify({ user_id: userId, ...payload })
+      if (!patchResp.ok) {
+        const err = await patchResp.text();
+        return res.status(500).json({ error: `Erro ao atualizar perfil: ${err}` });
       }
-    );
 
-    if (!insertResp.ok) {
-      const err = await insertResp.text();
-      return res.status(500).json({ error: `INSERT failed: ${err}` });
+      return res.status(200).json({ success: true, action: 'updated' });
+
+    } else {
+      // PASSO 2b: perfil não existe → faz INSERT
+      const insertResp = await fetch(
+        `${supabaseUrl}/rest/v1/profiles`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'apikey': supabaseKey,
+            'Authorization': `Bearer ${token}`, // token do usuário
+            'Prefer': 'return=minimal'
+          },
+          body: JSON.stringify({ user_id: userId, ...payload })
+        }
+      );
+
+      if (!insertResp.ok) {
+        const err = await insertResp.text();
+        return res.status(500).json({ error: `Erro ao criar perfil: ${err}` });
+      }
+
+      return res.status(200).json({ success: true, action: 'created' });
     }
-
-    return res.status(200).json({ success: true });
   }
 
   return res.status(405).json({ error: 'Method not allowed' });
