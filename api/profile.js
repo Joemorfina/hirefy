@@ -61,6 +61,11 @@ export default async function handler(req, res) {
     const checkData = await checkResp.json();
     const profileExists = Array.isArray(checkData) && checkData.length > 0;
 
+    // DEBUG — aparece no log do Vercel
+    console.log('[profile] userId:', userId);
+    console.log('[profile] checkData:', JSON.stringify(checkData));
+    console.log('[profile] profileExists:', profileExists);
+
     if (profileExists) {
       // PASSO 2a: perfil existe → faz PATCH (update)
       const patchResp = await fetch(
@@ -86,6 +91,7 @@ export default async function handler(req, res) {
 
     } else {
       // PASSO 2b: perfil não existe → faz INSERT
+      console.log("[profile] Caiu no INSERT — userId:", userId, "payload:", JSON.stringify(payload));
       const insertResp = await fetch(
         `${supabaseUrl}/rest/v1/profiles`,
         {
