@@ -1,0 +1,8 @@
+{
+  "name": "hirefy",
+  "version": "1.0.0",
+  "private": true,
+  "dependencies": {
+    "unpdf": "^0.11.0"
+  }
+}
