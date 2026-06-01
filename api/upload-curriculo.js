@@ -1,5 +1,3 @@
-import { Buffer } from 'buffer';
-
 export const config = {
   api: {
     bodyParser: {
@@ -26,10 +24,7 @@ export default async function handler(req, res) {
   if (!token) return res.status(401).json({ error: 'Token não fornecido' });
 
   const userResp = await fetch(`${supabaseUrl}/auth/v1/user`, {
-    headers: {
-      'apikey': supabaseKey,
-      'Authorization': `Bearer ${token}`
-    }
+    headers: { 'apikey': supabaseKey, 'Authorization': `Bearer ${token}` }
   });
   if (!userResp.ok) return res.status(401).json({ error: 'Token inválido' });
 
@@ -37,15 +32,29 @@ export default async function handler(req, res) {
   const userId = userData.id;
 
   // Recebe o PDF em base64
-  const { pdfBase64, fileName } = req.body;
-  if (!pdfBase64) {
-    return res.status(400).json({ error: 'PDF não enviado' });
+  const { pdfBase64 } = req.body;
+  if (!pdfBase64) return res.status(400).json({ error: 'PDF não enviado' });
+
+  // Extrai texto do PDF usando unpdf (serverless-first, sem dependências nativas)
+  let textoExtraido = '';
+  try {
+    const { getDocument, extractText } = await import('unpdf');
+    const pdfBuffer = Buffer.from(pdfBase64, 'base64');
+    const pdf = await getDocument({ data: pdfBuffer }).promise;
+    textoExtraido = await extractText(pdf);
+    pdf.destroy();
+  } catch (err) {
+    return res.status(500).json({ error: `Erro ao ler PDF: ${err.message}` });
   }
 
-  // Usa a API da Groq para extrair e estruturar o texto do currículo
-  // Envia o conteúdo base64 do PDF para a IA interpretar
-  let curriculoTexto = '';
+  if (!textoExtraido || textoExtraido.trim().length < 50) {
+    return res.status(400).json({ 
+      error: 'Não foi possível extrair texto do PDF. Verifique se o arquivo não está escaneado.' 
+    });
+  }
 
+  // Manda o texto extraído para a IA estruturar
+  let curriculoTexto = '';
   try {
     const groqResp = await fetch('https://api.groq.com/openai/v1/chat/completions', {
       method: 'POST',
@@ -60,8 +69,9 @@ export default async function handler(req, res) {
           {
             role: 'system',
             content: `Você é um extrator de informações de currículos. 
-Receberá o conteúdo de um currículo e deve extrair e estruturar as informações em texto simples.
-Retorne APENAS um texto estruturado com as seguintes seções (se existirem):
+Receberá o texto bruto de um currículo e deve estruturá-lo de forma clara.
+Retorne APENAS um texto estruturado com as seguintes seções (preencha só as que existirem):
+
 NOME: 
 CARGO ATUAL OU DESEJADO:
 RESUMO PROFISSIONAL:
@@ -69,11 +79,12 @@ EXPERIÊNCIAS:
 FORMAÇÃO:
 HABILIDADES:
 IDIOMAS:
-Seja fiel ao conteúdo original. Não invente informações.`
+
+Seja fiel ao conteúdo original. Não invente informações. Seja conciso.`
           },
           {
             role: 'user',
-            content: `Extraia as informações deste currículo (conteúdo em base64 — interprete como texto de currículo):\n\n${pdfBase64.substring(0, 8000)}`
+            content: `Estruture este currículo:\n\n${textoExtraido.substring(0, 4000)}`
           }
         ]
       })
@@ -81,21 +92,21 @@ Seja fiel ao conteúdo original. Não invente informações.`
 
     if (!groqResp.ok) {
       const err = await groqResp.text();
-      return res.status(500).json({ error: `Erro ao processar currículo: ${err}` });
+      return res.status(500).json({ error: `Erro ao processar com IA: ${err}` });
     }
 
     const groqData = await groqResp.json();
     curriculoTexto = groqData.choices?.[0]?.message?.content || '';
 
     if (!curriculoTexto) {
-      return res.status(500).json({ error: 'Não foi possível extrair o texto do currículo' });
+      return res.status(500).json({ error: 'IA não retornou resposta' });
     }
 
   } catch (err) {
-    return res.status(500).json({ error: `Erro ao processar PDF: ${err.message}` });
+    return res.status(500).json({ error: `Erro na IA: ${err.message}` });
   }
 
-  // Salva o texto extraído no perfil do usuário
+  // Salva no perfil do usuário
   const patchResp = await fetch(
     `${supabaseUrl}/rest/v1/profiles?user_id=eq.${userId}`,
     {
@@ -112,11 +123,8 @@ Seja fiel ao conteúdo original. Não invente informações.`
 
   if (!patchResp.ok) {
     const err = await patchResp.text();
-    return res.status(500).json({ error: `Erro ao salvar currículo: ${err}` });
+    return res.status(500).json({ error: `Erro ao salvar: ${err}` });
   }
 
-  return res.status(200).json({
-    success: true,
-    curriculo_texto: curriculoTexto
-  });
+  return res.status(200).json({ success: true, curriculo_texto: curriculoTexto });
 }
