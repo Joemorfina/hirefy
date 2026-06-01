@@ -15,8 +15,6 @@
 }
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
-
-/* AUTH SCREEN */
 .auth-screen { display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 20px; }
 .auth-box { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 40px; width: 100%; max-width: 420px; }
 .auth-logo { font-family: 'Syne', sans-serif; font-size: 28px; font-weight: 800; text-align: center; margin-bottom: 8px; }
@@ -30,8 +28,6 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
 .form-input { width: 100%; background: var(--surface2); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 12px 14px; font-size: 14px; color: var(--text); font-family: 'DM Sans', sans-serif; outline: none; transition: border-color 0.15s; }
 .form-input:focus { border-color: var(--accent); }
 .form-error { color: var(--red); font-size: 13px; margin-top: 12px; text-align: center; }
-
-/* APP SHELL */
 .shell { display: flex; min-height: 100vh; }
 .sidebar { width: 220px; background: var(--surface); border-right: 1px solid var(--border); padding: 28px 0; display: flex; flex-direction: column; gap: 4px; position: fixed; height: 100vh; z-index: 10; }
 .logo { font-family: 'Syne', sans-serif; font-size: 22px; font-weight: 800; padding: 0 24px 24px; color: var(--text); }
@@ -45,7 +41,6 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
 .topbar-title { font-family: 'Syne', sans-serif; font-size: 18px; font-weight: 700; }
 .topbar-right { display: flex; align-items: center; gap: 12px; }
 .user-email { font-size: 12px; color: var(--muted2); }
-.avatar { width: 34px; height: 34px; border-radius: 50%; background: linear-gradient(135deg, var(--accent2), var(--accent)); display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; color: #000; cursor: pointer; }
 .logout-btn { font-size: 12px; color: var(--muted); cursor: pointer; padding: 6px 12px; border: 1px solid var(--border); border-radius: 8px; background: none; font-family: 'DM Sans', sans-serif; transition: all 0.15s; }
 .logout-btn:hover { color: var(--red); border-color: var(--red); }
 .page { display: none; padding: 32px; animation: fadeIn 0.2s ease; }
@@ -124,6 +119,9 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
 .spinner { width: 20px; height: 20px; border: 2px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin 0.8s linear infinite; }
 @keyframes spin { to { transform: rotate(360deg); } }
 .profile-alert { background: rgba(200,241,53,0.07); border: 1px solid var(--accent); border-radius: var(--radius-sm); padding: 14px 16px; margin-bottom: 20px; font-size: 13px; color: var(--accent); }
+.upload-area { border: 1.5px dashed var(--border); border-radius: var(--radius-sm); padding: 18px; text-align: center; margin-bottom: 8px; transition: border-color 0.15s; }
+.upload-area:hover { border-color: var(--accent); }
+.upload-status { font-size: 13px; color: var(--muted2); margin-top: 8px; }
 .mobile-header { display: none; }
 .mobile-nav { display: none; }
 @media (max-width: 768px) {
@@ -181,7 +179,7 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
   <div class="nav-item" onclick="showPage('jobs')"><span class="nav-icon">📋</span> Minhas Vagas</div>
   <div class="nav-item" onclick="showPage('profile')"><span class="nav-icon">👤</span> Meu Perfil</div>
   <div style="margin-top:auto;padding:0 24px;">
-    <div style="font-size:11px;color:var(--muted);padding-top:20px;border-top:1px solid var(--border);">v1.3 · HireFy Beta</div>
+    <div style="font-size:11px;color:var(--muted);padding-top:20px;border-top:1px solid var(--border);">v1.4 · HireFy Beta</div>
   </div>
 </nav>
 <div class="main">
@@ -285,6 +283,25 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
           <label class="form-label">Resumo do seu perfil</label>
           <textarea class="textarea-field" id="p-resumo" style="min-height:100px;" placeholder="Descreva brevemente sua experiência, pontos fortes e o que busca. Quanto mais detalhado, melhor a análise de vagas."></textarea>
         </div>
+
+        <!-- UPLOAD DE CURRÍCULO -->
+        <div class="form-group">
+          <label class="form-label">Currículo (PDF)</label>
+          <div class="upload-area">
+            <div style="font-size:24px;margin-bottom:8px;">📄</div>
+            <div style="font-size:13px;color:var(--muted2);margin-bottom:12px;">Envie seu currículo em PDF para preencher o perfil automaticamente</div>
+            <input type="file" id="curriculo-input" accept=".pdf" style="display:none" onchange="uploadCurriculo(this)">
+            <button type="button" onclick="document.getElementById('curriculo-input').click()" class="btn btn-secondary btn-sm">
+              📤 Selecionar PDF
+            </button>
+          </div>
+          <div id="curriculo-status" class="upload-status"></div>
+          <div id="curriculo-preview" style="display:none;margin-top:12px;">
+            <label class="form-label">Texto extraído do currículo</label>
+            <textarea id="curriculo-texto-preview" rows="6" readonly class="textarea-field" style="font-size:12px;color:var(--muted2);min-height:auto;"></textarea>
+          </div>
+        </div>
+
         <button class="btn btn-primary" onclick="salvarPerfil()">💾 Salvar Perfil</button>
         <div id="profile-msg" style="display:none;margin-top:12px;font-size:13px;text-align:center;"></div>
       </div>
@@ -309,7 +326,6 @@ let vagasDB = [];
 let userProfile = null;
 let currentAuthMode = 'login';
 
-// ── AUTH ──────────────────────────────────────────────
 function switchTab(mode) {
   currentAuthMode = mode;
   document.querySelectorAll('.auth-tab').forEach((t,i) => {
@@ -324,13 +340,8 @@ async function doAuth() {
   const password = document.getElementById('auth-password').value;
   const errEl = document.getElementById('auth-error');
   const btn = document.getElementById('auth-btn');
-
   if (!email || !password) { errEl.textContent = 'Preencha email e senha.'; errEl.style.display='block'; return; }
-
-  btn.disabled = true;
-  btn.textContent = '⏳ Aguarde...';
-  errEl.style.display = 'none';
-
+  btn.disabled = true; btn.textContent = '⏳ Aguarde...'; errEl.style.display = 'none';
   try {
     const resp = await fetch('/api/auth', {
       method: 'POST',
@@ -338,51 +349,39 @@ async function doAuth() {
       body: JSON.stringify({ action: currentAuthMode, email, password })
     });
     const data = await resp.json();
-
     if (!resp.ok) { errEl.textContent = data.error || 'Erro ao autenticar'; errEl.style.display='block'; return; }
-
     currentToken = data.access_token;
     currentUser = data.user;
     localStorage.setItem('hirefy_token', currentToken);
     localStorage.setItem('hirefy_user', JSON.stringify(currentUser));
     initApp();
-
   } catch(e) {
-    errEl.textContent = 'Erro de conexão. Tente novamente.';
-    errEl.style.display = 'block';
+    errEl.textContent = 'Erro de conexão. Tente novamente.'; errEl.style.display = 'block';
   } finally {
-    btn.disabled = false;
-    btn.textContent = currentAuthMode === 'login' ? 'Entrar' : 'Cadastrar';
+    btn.disabled = false; btn.textContent = currentAuthMode === 'login' ? 'Entrar' : 'Cadastrar';
   }
 }
 
 function doLogout() {
-  localStorage.removeItem('hirefy_token');
-  localStorage.removeItem('hirefy_user');
+  localStorage.removeItem('hirefy_token'); localStorage.removeItem('hirefy_user');
   currentToken = null; currentUser = null; userProfile = null;
   document.getElementById('app').style.display = 'none';
   document.getElementById('auth-screen').style.display = 'flex';
   document.getElementById('mobile-nav').style.display = 'none';
 }
 
-// ── INIT APP ──────────────────────────────────────────
 async function initApp() {
   document.getElementById('auth-screen').style.display = 'none';
   document.getElementById('app').style.display = 'block';
   document.getElementById('mobile-nav').style.display = 'flex';
-  if (currentUser?.email) {
-    document.getElementById('user-email-display').textContent = currentUser.email;
-  }
+  if (currentUser?.email) document.getElementById('user-email-display').textContent = currentUser.email;
   await carregarPerfil();
   await carregarVagas();
 }
 
-// ── PERFIL ────────────────────────────────────────────
 async function carregarPerfil() {
   try {
-    const resp = await fetch('/api/profile', {
-      headers: { 'Authorization': `Bearer ${currentToken}` }
-    });
+    const resp = await fetch('/api/profile', { headers: { 'Authorization': `Bearer ${currentToken}` } });
     if (resp.ok) {
       userProfile = await resp.json();
       if (userProfile) {
@@ -392,6 +391,12 @@ async function carregarPerfil() {
         document.getElementById('p-modelo').value = userProfile.preferencia_modelo || 'Remoto';
         document.getElementById('p-ingles').value = userProfile.ingles || 'Intermediário';
         document.getElementById('p-resumo').value = userProfile.resumo_perfil || '';
+        if (userProfile.curriculo_texto) {
+          document.getElementById('curriculo-status').textContent = '✅ Currículo já enviado anteriormente.';
+          document.getElementById('curriculo-status').style.color = 'var(--green)';
+          document.getElementById('curriculo-preview').style.display = 'block';
+          document.getElementById('curriculo-texto-preview').value = userProfile.curriculo_texto;
+        }
       }
     }
   } catch(e) { console.error('Erro perfil:', e); }
@@ -400,18 +405,13 @@ async function carregarPerfil() {
 
 function checkProfileWarning() {
   const warn = document.getElementById('profile-warning');
-  if (!userProfile || !userProfile.resumo_perfil) {
-    warn.style.display = 'block';
-  } else {
-    warn.style.display = 'none';
-  }
+  if (!userProfile || !userProfile.resumo_perfil) { warn.style.display = 'block'; } else { warn.style.display = 'none'; }
 }
 
 async function salvarPerfil() {
   const btn = document.querySelector('#page-profile .btn-primary');
   const msg = document.getElementById('profile-msg');
   btn.disabled = true; btn.textContent = '⏳ Salvando...';
-
   try {
     const resp = await fetch('/api/profile', {
       method: 'POST',
@@ -425,34 +425,56 @@ async function salvarPerfil() {
         resumo_perfil: document.getElementById('p-resumo').value
       })
     });
-
     if (resp.ok) {
-      msg.textContent = '✅ Perfil salvo com sucesso!';
-      msg.style.color = 'var(--green)';
-      msg.style.display = 'block';
+      msg.textContent = '✅ Perfil salvo com sucesso!'; msg.style.color = 'var(--green)'; msg.style.display = 'block';
       await carregarPerfil();
     } else {
-      msg.textContent = '❌ Erro ao salvar. Tente novamente.';
-      msg.style.color = 'var(--red)';
-      msg.style.display = 'block';
+      msg.textContent = '❌ Erro ao salvar. Tente novamente.'; msg.style.color = 'var(--red)'; msg.style.display = 'block';
     }
   } catch(e) {
-    msg.textContent = '❌ Erro de conexão.';
-    msg.style.color = 'var(--red)';
-    msg.style.display = 'block';
+    msg.textContent = '❌ Erro de conexão.'; msg.style.color = 'var(--red)'; msg.style.display = 'block';
   } finally {
-    btn.disabled = false;
-    btn.textContent = '💾 Salvar Perfil';
+    btn.disabled = false; btn.textContent = '💾 Salvar Perfil';
     setTimeout(() => msg.style.display = 'none', 3000);
   }
 }
 
-// ── VAGAS ─────────────────────────────────────────────
+async function uploadCurriculo(input) {
+  const file = input.files[0];
+  if (!file) return;
+  const statusEl = document.getElementById('curriculo-status');
+  statusEl.textContent = '⏳ Processando currículo...';
+  statusEl.style.color = 'var(--yellow)';
+  const reader = new FileReader();
+  reader.onload = async function(e) {
+    const base64 = e.target.result.split(',')[1];
+    try {
+      const resp = await fetch('/api/upload-curriculo', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${currentToken}` },
+        body: JSON.stringify({ pdfBase64: base64, fileName: file.name })
+      });
+      const data = await resp.json();
+      if (data.success) {
+        statusEl.textContent = '✅ Currículo processado e salvo!';
+        statusEl.style.color = 'var(--green)';
+        document.getElementById('curriculo-preview').style.display = 'block';
+        document.getElementById('curriculo-texto-preview').value = data.curriculo_texto;
+      } else {
+        statusEl.textContent = '❌ Erro: ' + (data.error || 'Não foi possível processar');
+        statusEl.style.color = 'var(--red)';
+      }
+    } catch(err) {
+      statusEl.textContent = '❌ Erro ao enviar: ' + err.message;
+      statusEl.style.color = 'var(--red)';
+    }
+  };
+  reader.readAsDataURL(file);
+}
+
 async function carregarVagas() {
   try {
-    const resp = await fetch('/api/vagas', {
-      headers: { 'Authorization': `Bearer ${currentToken}` }
-    });
+    const resp = await fetch('/api/vagas', { headers: { 'Authorization': `Bearer ${currentToken}` } });
     if (resp.ok) { vagasDB = await resp.json(); renderJobsList(); }
   } catch(e) { console.error('Erro vagas:', e); }
 }
@@ -492,10 +514,8 @@ function renderJobsList() {
   document.getElementById('kpi-aplicadas').textContent = vagasDB.filter(v=>v.status==='APLICADA').length;
   document.getElementById('kpi-aguardando').textContent = vagasDB.filter(v=>v.status==='AGUARDANDO').length;
   document.getElementById('kpi-processo').textContent = vagasDB.filter(v=>v.status==='PROCESSO').length;
-
   const empty = '<div style="padding:24px;text-align:center;color:var(--muted);font-size:13px;">Nenhuma vaga ainda. <span style="color:var(--accent);cursor:pointer;" onclick="showPage(\'analyze\')">Analisar agora →</span></div>';
   if (!vagasDB.length) { if(list)list.innerHTML=empty; if(listFull)listFull.innerHTML=empty; return; }
-
   const rows = vagasDB.map(v => {
     const ver = getVeredito(v.veredito);
     const p = v.placar || {};
@@ -511,26 +531,15 @@ function renderJobsList() {
   if(list)list.innerHTML=rows; if(listFull)listFull.innerHTML=rows;
 }
 
-// ── ANALISAR ──────────────────────────────────────────
 async function analisarVaga() {
   const jobText = document.getElementById('job-input').value.trim();
   if (!jobText) { alert('Cole o texto da vaga primeiro.'); return; }
-
   const btn = document.getElementById('btn-analisar');
   const resultArea = document.getElementById('result-area');
   btn.disabled = true; btn.textContent = '⏳ Analisando...';
-  resultArea.style.display = 'flex';
-  resultArea.className = 'result-panel';
+  resultArea.style.display = 'flex'; resultArea.className = 'result-panel';
   resultArea.innerHTML = '<div class="loading-spinner"><div class="spinner"></div> Analisando com IA...</div>';
-
-  const perfil = userProfile ? `
-Nome: ${userProfile.nome || ''}
-Cargo atual: ${userProfile.cargo_atual || ''}
-Área: ${userProfile.area || ''}
-Preferência: ${userProfile.preferencia_modelo || ''}
-Inglês: ${userProfile.ingles || ''}
-Perfil: ${userProfile.resumo_perfil || ''}` : 'Perfil não preenchido — usar análise genérica.';
-
+  const perfil = userProfile ? `Nome: ${userProfile.nome||''}\nCargo atual: ${userProfile.cargo_atual||''}\nÁrea: ${userProfile.area||''}\nPreferência: ${userProfile.preferencia_modelo||''}\nInglês: ${userProfile.ingles||''}\nPerfil: ${userProfile.resumo_perfil||''}` : 'Perfil não preenchido — usar análise genérica.';
   try {
     const resp = await fetch('/api/analyze', {
       method: 'POST',
@@ -554,14 +563,12 @@ function renderResult(area, d) {
   let verClass = 'veredito-ressalvas', verTextClass = 'veredito-text-ressalvas', verIcon = '⚠️';
   if (verUpper.includes('AGORA')) { verClass='veredito-aplica'; verTextClass='veredito-text-aplica'; verIcon='✅'; }
   else if (verUpper.includes('NÃO')||verUpper.includes('NAO')) { verClass='veredito-nao'; verTextClass='veredito-text-nao'; verIcon='❌'; }
-
   const p = d.placar||{}, l = d.levantamento||{}, r = d.respostas||{};
   const keywords = (l.keywords||[]).map(k=>`<span class="pill">${k}</span>`).join('');
   const pros = (d.pros||[]).map(x=>`<div class="pro-item"><span class="pro-dot">✓</span>${x}</div>`).join('');
   const contras = (d.contras||[]).map(x=>`<div class="pro-item"><span class="contra-dot">✗</span>${x}</div>`).join('');
   const riscos = (d.riscos||[]).map(x=>`<div style="display:flex;align-items:flex-start;gap:10px;margin-bottom:6px;"><span style="color:var(--yellow);">●</span><span>${x}</span></div>`).join('');
   const cargo = l.cargo||'';
-
   area.innerHTML = `
     <div class="result-block"><div class="result-block-header"><div class="result-block-label">📌 Resumo em 1 linha</div></div><div class="result-block-body">${d.resumo||''}</div></div>
     <div class="result-block"><div class="result-block-header"><div class="result-block-label">⚡ Check Rápido</div></div>
@@ -624,7 +631,7 @@ function renderResult(area, d) {
            ['Google Jobs',`https://www.google.com/search?q=${encodeURIComponent(cargo)}+vaga+remota&ibp=htl;jobs`]
           ].map(([label,url])=>`
         <div class="dork-item">
-          <div class="dork-text">🔍 ${label} — ${cargo}</div>
+          <div>${label} — ${cargo}</div>
           <a href="${url}" target="_blank" class="btn btn-secondary btn-sm" style="text-decoration:none;">Abrir →</a>
         </div>`).join('')}
       </div></div></div>
@@ -643,10 +650,7 @@ function copiar(btn, encoded) {
   });
 }
 
-// ── START ─────────────────────────────────────────────
-if (currentToken) {
-  initApp();
-}
+if (currentToken) { initApp(); }
 </script>
 </body>
 </html>
