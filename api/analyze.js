@@ -10,10 +10,58 @@ export default async function handler(req, res) {
   const supabaseUrl = process.env.SUPABASE_URL;
   const supabaseKey = process.env.SUPABASE_ANON_KEY;
 
+  // ── 1. Extrai e valida o token do usuário logado ───────────────────────────
+  const token = req.headers.authorization?.replace('Bearer ', '');
+  if (!token) return res.status(401).json({ error: 'Token não fornecido' });
+
+  const userResp = await fetch(`${supabaseUrl}/auth/v1/user`, {
+    headers: {
+      'apikey': supabaseKey,
+      'Authorization': `Bearer ${token}`
+    }
+  });
+  if (!userResp.ok) return res.status(401).json({ error: 'Token inválido' });
+
+  const userData = await userResp.json();
+  const userId = userData.id;
+
+  // ── 2. Busca o perfil do usuário logado no Supabase ───────────────────────
+  let perfilTexto = 'Profissional em busca de recolocação.'; // fallback genérico
+
+  try {
+    const profileResp = await fetch(
+      `${supabaseUrl}/rest/v1/profiles?user_id=eq.${userId}&select=*&limit=1`,
+      {
+        headers: {
+          'apikey': supabaseKey,
+          'Authorization': `Bearer ${token}`
+        }
+      }
+    );
+    if (profileResp.ok) {
+      const profileData = await profileResp.json();
+      const p = Array.isArray(profileData) ? profileData[0] : null;
+      if (p) {
+        // Monta o contexto dinamicamente com os campos salvos
+        const partes = [];
+        if (p.nome)               partes.push(p.nome);
+        if (p.cargo_atual)        partes.push(`Cargo: ${p.cargo_atual}`);
+        if (p.area)               partes.push(`Área: ${p.area}`);
+        if (p.preferencia_modelo) partes.push(`Preferência de modelo: ${p.preferencia_modelo}`);
+        if (p.ingles)             partes.push(`Inglês: ${p.ingles}`);
+        if (p.resumo_perfil)      partes.push(p.resumo_perfil);
+        if (partes.length > 0) perfilTexto = partes.join(' | ');
+      }
+    }
+  } catch (e) {
+    // Se falhar ao buscar perfil, segue com o fallback — não bloqueia a análise
+    console.error('[analyze] Erro ao buscar perfil:', e.message);
+  }
+
   const prompt = `Você é um assistente especialista em carreira e candidaturas. Analise a vaga abaixo com base no perfil do candidato e retorne uma análise completa em português brasileiro.
 
 PERFIL DO CANDIDATO:
-Bruno Brasileiro — Profissional com mais de 10 anos de experiência em atendimento ao cliente, suporte pós-vendas e rotinas administrativas. Experiência em atendimento multicanal (e-mail, chat, WhatsApp e telefone), triagem e acompanhamento de chamados, interface com áreas internas. Inglês B2 certificado (EF SET 51/100). Preferência por vagas remotas, backoffice, suporte via tickets/chat. Evita call center pesado, muitas ligações ou exposição constante em vídeo.
+${perfilTexto}
 
 VAGA:
 ${jobText}
@@ -89,17 +137,17 @@ Retorne APENAS um JSON válido, sem markdown, sem texto fora do JSON:
     // 2. Salva no Supabase — só se as credenciais existirem
     if (supabaseUrl && supabaseKey) {
       const l = parsed.levantamento || {};
-      const baseUrl = supabaseUrl.replace(/\/rest\/v1.*$/, '');
-      
-      await fetch(`${baseUrl}/rest/v1/vagas`, {
+
+      await fetch(`${supabaseUrl}/rest/v1/vagas`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           'apikey': supabaseKey,
-          'Authorization': `Bearer ${supabaseKey}`,
+          'Authorization': `Bearer ${token}`, // JWT do usuário → RLS aplicado
           'Prefer': 'return=minimal'
         },
         body: JSON.stringify({
+          user_id: userId,          // vincula a vaga ao usuário logado
           cargo: l.cargo || '',
           empresa: l.empresa || '',
           local: l.local || '',
