@@ -114,7 +114,7 @@ Retorne APENAS um JSON válido, sem markdown, sem texto fora do JSON:
         'Authorization': `Bearer ${groqKey}`
       },
       body: JSON.stringify({
-        model: 'llama-3.3-70b-versatile',
+model: 'openai/gpt-oss-120b',
         messages: [{ role: 'user', content: prompt }],
         temperature: 0.7,
         max_tokens: 2048
