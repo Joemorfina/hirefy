@@ -117,7 +117,7 @@ Retorne APENAS um JSON válido, sem markdown, sem texto fora do JSON:
 model: 'openai/gpt-oss-120b',
         messages: [{ role: 'user', content: prompt }],
         temperature: 0.7,
-        max_tokens: 2048
+max_tokens: 4096
       })
     });
 
